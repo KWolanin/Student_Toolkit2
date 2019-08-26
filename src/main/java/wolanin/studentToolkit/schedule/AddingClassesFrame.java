@@ -55,7 +55,7 @@ class AddingClassesFrame extends JDialog {
 			e.getMessage();
 		}
 		if (classesName.equals("") | room == 0) {
-			JOptionPane.showMessageDialog(null, "Wpusz poprawne dane!", "Dodawanie zajęć", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Wpisz poprawne dane!", "Dodawanie zajęć", JOptionPane.INFORMATION_MESSAGE);
 
 		} else {
 			PreparedStatement ps = MainFrame.con.prepareStatement("insert into classes(name, dayofweek, startHour, endHour, room) values(?,?,?,?,?);");
