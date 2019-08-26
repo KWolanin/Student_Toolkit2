@@ -1,22 +1,24 @@
 package wolanin.studentToolkit;
 
-import wolanin.studentToolkit.about.*;
+import wolanin.studentToolkit.about.AboutFrame;
 import wolanin.studentToolkit.database.dbConnection;
+import wolanin.studentToolkit.exam.Exam;
 import wolanin.studentToolkit.frame.FormatFrame;
-import wolanin.studentToolkit.schedule.*;
-import wolanin.studentToolkit.exam.*;
-import wolanin.studentToolkit.grade.*;
-import wolanin.studentToolkit.notes.*;
-import wolanin.studentToolkit.teacher.*;
+import wolanin.studentToolkit.grade.Grade;
+import wolanin.studentToolkit.notes.Notes;
+import wolanin.studentToolkit.schedule.Schedule;
+import wolanin.studentToolkit.teacher.Teacher;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 
 
@@ -311,7 +313,7 @@ public class MainFrame extends JFrame {
 
 	@SuppressWarnings("ignored")
 	private void createFileDir() {
-		File dir = new File("Notatki");
+		File dir = new File("UserNotes");
 		if (!dir.exists()) {
 			dir.mkdir();
 		}

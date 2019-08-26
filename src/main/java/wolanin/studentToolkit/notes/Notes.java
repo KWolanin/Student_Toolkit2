@@ -33,7 +33,7 @@ public class Notes {
 		fileChooser.addChoosableFileFilter(filter);
 		fileChooser.setFileFilter(filter);
 		fileChooser.setDialogTitle("Zapisz plik");
-		fileChooser.setCurrentDirectory(new File("Notatki"));
+		fileChooser.setCurrentDirectory(new File("UserNotes"));
 		fileChooser.setMultiSelectionEnabled(false);
 		int userSelection = fileChooser.showSaveDialog(null);
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
@@ -51,7 +51,7 @@ public class Notes {
 		BufferedReader in;
 		fileChooser = new JFileChooser();
 		setPolishFileChooser(fileChooser);
-		fileChooser.setCurrentDirectory(new File("Notatki"));
+		fileChooser.setCurrentDirectory(new File("UserNotes"));
 		fileChooser.setFileFilter(openFilter);
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setDialogTitle("Otwórz plik");
@@ -68,7 +68,7 @@ public class Notes {
 	}
 
 	public void openDir() throws IOException {
-		Desktop.getDesktop().open(new File("Notatki"));
+		Desktop.getDesktop().open(new File("UserNotes"));
 	}
 
 	private static void setPolishFileChooser(JFileChooser fileChooser) {
