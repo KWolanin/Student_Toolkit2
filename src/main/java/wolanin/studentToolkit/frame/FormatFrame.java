@@ -4,6 +4,7 @@ import wolanin.studentToolkit.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
@@ -49,7 +50,13 @@ public class FormatFrame {
 		button.setMinimumSize(buttonDims);
 		button.setMaximumSize(buttonDims);
 		toolbarName.add(button);
-		button.addActionListener(MainFrame::listenerChooser);
+		button.addActionListener(e -> {
+			try {
+				MainFrame.listenerChooser(e);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		});
 	}
 
 	public static void setToolbarSettings(JToolBar toolBar) {

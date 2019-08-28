@@ -1,29 +1,30 @@
 package wolanin.studentToolkit;
 
-import wolanin.studentToolkit.about.AboutFrame;
+import wolanin.studentToolkit.about.*;
 import wolanin.studentToolkit.database.dbConnection;
-import wolanin.studentToolkit.exam.Exam;
 import wolanin.studentToolkit.frame.FormatFrame;
-import wolanin.studentToolkit.grade.Grade;
-import wolanin.studentToolkit.notes.Notes;
-import wolanin.studentToolkit.schedule.Schedule;
-import wolanin.studentToolkit.teacher.Teacher;
+import wolanin.studentToolkit.frame.FrameLayout;
+import wolanin.studentToolkit.schedule.*;
+import wolanin.studentToolkit.exam.*;
+import wolanin.studentToolkit.grade.*;
+import wolanin.studentToolkit.notes.*;
+import wolanin.studentToolkit.teacher.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
+
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 
 public class MainFrame extends JFrame {
-	private final JTabbedPane tabs = new JTabbedPane();
+	public static final JTabbedPane tabs = new JTabbedPane();
 	private final JLabel grades = new JLabel();
 	private final JLabel teachers = new JLabel();
 	private final JLabel labelSchedule = new JLabel();
@@ -31,18 +32,18 @@ public class MainFrame extends JFrame {
 	private final JLabel ownNotes = new JLabel();
 	private static final String currentDate = "";
 	public static final JLabel scheduleLabel = new JLabel(currentDate, SwingConstants.CENTER);
-	private final JMenuBar menuBar = new JMenuBar();
-	private final JMenu fileMenu = new JMenu("Plik");
-	private final JMenu helpMenu = new JMenu("Pomoc");
-	private final JMenuItem exit = new JMenuItem("Wyjście");
-	private final JMenuItem about = new JMenuItem("O programie");
+	private static final JMenuBar menuBar = new JMenuBar();
+	private final JMenu fileMenu = new JMenu(setProperties().getProperty("menu.file"));
+	private final JMenu helpMenu = new JMenu(setProperties().getProperty("menu.help"));
+	private final JMenuItem exit = new JMenuItem(setProperties().getProperty("menu.exit"));
+	private final JMenuItem about = new JMenuItem(setProperties().getProperty("menu.about"));
 	private final JToolBar gradesToolbar = new JToolBar();
 	private final JToolBar teachersToolbar = new JToolBar();
 	private final JToolBar examsToolbar = new JToolBar();
 	private final JToolBar scheduleToolbar = new JToolBar();
 	private final JToolBar notesToolbar = new JToolBar();
 	public static final JTextArea noteArea = new JTextArea();
-	private final JPanel tabPanel = new JPanel();
+	public static final JPanel tabPanel = new JPanel();
 	public static final JPanel gradesPanel = new JPanel();
 	public static final JPanel examPanel = new JPanel();
 	public static final JPanel teachersPanel = new JPanel();
@@ -61,10 +62,14 @@ public class MainFrame extends JFrame {
 	private static final Teacher teacher = new Teacher();
 	private static final Schedule schedule = new Schedule();
 	private static final Notes notes = new Notes();
+	public static final boolean PLlang = true;
 
-
-	MainFrame() {
-		initComponents();
+	MainFrame() throws IOException {
+		try {
+			initComponents();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		try {
 			dbConnection.connectToBase();
 		} catch (ClassNotFoundException | SQLException | NullPointerException | IOException e) {
@@ -96,9 +101,9 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
-	private void initComponents() {
+	private void initComponents() throws IOException {
 		setIconImage(new ImageIcon("src\\main\\resources\\student.png").getImage());
-		setTitle("Przybornik Studenta");
+		setTitle(setProperties().getProperty("app.title"));
 		Container contentPane = getContentPane();
 		setJMenuBar(menuBar);
 		menuBar.add(fileMenu);
@@ -107,21 +112,21 @@ public class MainFrame extends JFrame {
 		helpMenu.add(about);
 		about.addActionListener(e -> new AboutFrame().setVisible(true));
 		exit.addActionListener(e -> System.exit(0));
-		setGroupLayout(contentPane);
-		tabs.addTab("Oceny", null, grades, "Informacje o otrzymanych ocenach");
-		tabs.addTab("Wykładowcy", null, teachers, "Informacje o wykładowcach");
-		tabs.addTab("Zaliczenia", null, exams, "Informacje o nadchodzących zaliczeniach");
-		tabs.addTab("Plan zajęć", null, labelSchedule, "Informacje o planie zajęć");
-		tabs.addTab("Notatki", null, ownNotes, "Własne notatki");
+		FrameLayout.setGroupLayout(contentPane);
+		tabs.addTab(setProperties().getProperty("tab.grade"), null, grades, setProperties().getProperty("tab.tip.grade"));
+		tabs.addTab(setProperties().getProperty("tab.lecturer"), null, teachers, setProperties().getProperty("tab.tip.lecturer"));
+		tabs.addTab(setProperties().getProperty("tab.exam"), null, exams, setProperties().getProperty("tab.tip.exam"));
+		tabs.addTab(setProperties().getProperty("tab.schedule"), null, labelSchedule, setProperties().getProperty("tab.tip.schedule"));
+		tabs.addTab(setProperties().getProperty("tab.note"), null, ownNotes, setProperties().getProperty("tab.tip.note"));
 
 		grades.setLayout(new BorderLayout());
 		FormatFrame.setToolbarSettings(gradesToolbar);
 		grades.add(gradesToolbar, BorderLayout.LINE_START);
-		FormatFrame.createToolbarButton("Pełna lista ocen", gradesToolbar);
-		FormatFrame.createToolbarButton("Wylicz średnią", gradesToolbar);
-		FormatFrame.createToolbarButton("Dodaj ocenę", gradesToolbar);
-		FormatFrame.createToolbarButton("Usuń ocenę", gradesToolbar);
-		FormatFrame.createToolbarButton("Pokaż niezaliczone", gradesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("grade.fulllist"), gradesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("grade.average"), gradesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("grade.add"), gradesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("grade.delete"), gradesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("grade.showUnpassed"), gradesToolbar);
 
 		grades.add(gradeScroll, BorderLayout.CENTER);
 		gradesPanel.setLayout(new BorderLayout());
@@ -129,9 +134,9 @@ public class MainFrame extends JFrame {
 		teachers.setLayout(new BorderLayout());
 		FormatFrame.setToolbarSettings(teachersToolbar);
 		teachers.add(teachersToolbar, BorderLayout.LINE_START);
-		FormatFrame.createToolbarButton("Dodaj wykładowcę", teachersToolbar);
-		FormatFrame.createToolbarButton("Usuń wykładowcę", teachersToolbar);
-		FormatFrame.createToolbarButton("Wyślij E-mail", teachersToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("teacher.add"), teachersToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("teacher.delete"), teachersToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("teacher.emailTo"), teachersToolbar);
 		teachers.add(teacherScroll, BorderLayout.CENTER);
 		teachersPanel.setLayout(new BorderLayout());
 
@@ -140,8 +145,8 @@ public class MainFrame extends JFrame {
 		exams.add(examScroll, BorderLayout.CENTER);
 		FormatFrame.setToolbarSettings(examsToolbar);
 		exams.add(examsToolbar, BorderLayout.LINE_START);
-		FormatFrame.createToolbarButton("Dodaj zaliczenie", examsToolbar);
-		FormatFrame.createToolbarButton("Usuń zaliczenie", examsToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("exam.add"), examsToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("exam.delete"), examsToolbar);
 
 		labelSchedule.setLayout(new BorderLayout());
 		FormatFrame.setToolbarSettings(scheduleToolbar);
@@ -151,19 +156,19 @@ public class MainFrame extends JFrame {
 		labelSchedule.add(schedulePanel, BorderLayout.CENTER);
 		schedulePanel.setLayout(new BorderLayout());
 		schedulePanel.add(scheduleTable, BorderLayout.CENTER);
-		FormatFrame.createToolbarButton("Dziś", scheduleToolbar);
-		FormatFrame.createToolbarButton("Jutro", scheduleToolbar);
-		FormatFrame.createToolbarButton("Tydzień", scheduleToolbar);
-		FormatFrame.createToolbarButton("Dodaj zajęcia", scheduleToolbar);
-		FormatFrame.createToolbarButton("Usuń zajęcia", scheduleToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.today"), scheduleToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.tommorow"), scheduleToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.week"), scheduleToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.add"), scheduleToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.delete"), scheduleToolbar);
 
 		ownNotes.setLayout(new BorderLayout());
 		FormatFrame.setToolbarSettings(notesToolbar);
 		ownNotes.add(notesToolbar, BorderLayout.LINE_START);
-		FormatFrame.createToolbarButton("Utwórz", notesToolbar);
-		FormatFrame.createToolbarButton("Otwórz", notesToolbar);
-		FormatFrame.createToolbarButton("Zapisz", notesToolbar);
-		FormatFrame.createToolbarButton("Otwórz folder", notesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("note.create"), notesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("note.open"), notesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("note.save"), notesToolbar);
+		FormatFrame.createToolbarButton(setProperties().getProperty("note.openFolder"), notesToolbar);
 		ownNotes.add(noteArea, BorderLayout.CENTER);
 		JScrollPane scrollPane = new JScrollPane(noteArea);
 		scrollPane.setHorizontalScrollBar(null);
@@ -172,184 +177,122 @@ public class MainFrame extends JFrame {
 		noteArea.setLineWrap(true);
 	}
 
-	public static void listenerChooser(ActionEvent e) {
+	public static void listenerChooser(ActionEvent e) throws IOException {
 		String tmp = e.getActionCommand();
-		switch (tmp) {
-			case "Wylicz średnią":
-				try {
-					grade.calcAverage();
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Dodaj ocenę":
-				grade.addGrade(con);
-				break;
-			case "Usuń ocenę":
-				try {
-					grade.deleteGrade();
-				} catch (NullPointerException | IndexOutOfBoundsException x) {
-					JOptionPane.showMessageDialog(null, "Najpierw wybierz ocenę!", "Usuwanie oceny", JOptionPane.INFORMATION_MESSAGE);
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Pełna lista ocen":
-				try {
-					grade.showGrades(con);
-				} catch (SQLException | NullPointerException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Pokaż niezaliczone":
-				try {
-					grade.showFailed();
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Dodaj wykładowcę":
-				teacher.addTeacher(con);
-				break;
-			case "Usuń wykładowcę":
-				try {
-					teacher.deleteTeacher(con);
-				} catch (NullPointerException | IndexOutOfBoundsException a) {
-					JOptionPane.showMessageDialog(null, "Najpierw wybierz wykładowcę!", "Usuwanie wykładowcy", JOptionPane.INFORMATION_MESSAGE);
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Wyślij E-mail":
-				try {
-					teacher.emailTo();
-				} catch (NullPointerException | ArrayIndexOutOfBoundsException n) {
-					JOptionPane.showMessageDialog(null, "Najpierw wybierz wykładowcę!", "Wysyłanie e-maila", JOptionPane.INFORMATION_MESSAGE);
-				} catch (IOException | URISyntaxException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Dodaj zaliczenie":
-				exam.addExam();
-				break;
-			case "Usuń zaliczenie":
-				try {
-					exam.deleteExam(con);
-				} catch (NullPointerException | IndexOutOfBoundsException ee) {
-					JOptionPane.showMessageDialog(null, "Najpierw wybierz zaliczenie!", "Usuwanie zaliczenia", JOptionPane.INFORMATION_MESSAGE);
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Odśwież":
-
-				try {
-					exam.showExams(con);
-				} catch (NullPointerException | SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Dziś":
-				try {
-					schedule.showTodaySchedule(con);
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Jutro":
-				try {
-					schedule.showTommorowSchedule(con);
-				} catch (ParseException | SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Tydzień":
-				try {
-					schedule.showWeekSchedule();
-				} catch (SQLException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Dodaj zajęcia":
-				schedule.addClasses();
-				break;
-			case "Usuń zajęcia":
-				try {
-					schedule.deleteClasses();
-				} catch (IndexOutOfBoundsException | NullPointerException ex) {
-					JOptionPane.showMessageDialog(null, "Najpierw wybierz zajęcia w widoku tygodniowym!", "Usuwanie zajęć", JOptionPane.INFORMATION_MESSAGE);
-				} catch (SQLException es) {
-					es.printStackTrace();
-				}
-				break;
-			case "Utwórz":
-				notes.clearNoteArea();
-				break;
-			case "Otwórz":
-				try {
-					notes.openFile();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Zapisz":
-				try {
-					notes.saveFile();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			case "Otwórz folder":
-				try {
-					notes.openDir();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				break;
-			default:
-				throw new IllegalStateException("Unexpected value: " + tmp);
+		if (setProperties().getProperty("grade.average").equals(tmp)) {
+			try {
+				grade.calcAverage();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("grade.add").equals(tmp)) {
+			grade.addGrade(con);
+		} else if (setProperties().getProperty("grade.delete").equals(tmp)) {
+			try {
+				grade.deleteGrade();
+			} catch (NullPointerException | IndexOutOfBoundsException x) {
+				JOptionPane.showMessageDialog(null, "Najpierw wybierz ocenę!", "Usuwanie oceny", JOptionPane.INFORMATION_MESSAGE);
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("grade.fulllist").equals(tmp)) {
+			try {
+				grade.showGrades(con);
+			} catch (SQLException | NullPointerException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("grade.showUnpassed").equals(tmp)) {
+			try {
+				grade.showFailed();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("teacher.add").equals(tmp)) {
+			teacher.addTeacher(con);
+		} else if (setProperties().getProperty("teacher.delete").equals(tmp)) {
+			try {
+				teacher.deleteTeacher(con);
+			} catch (NullPointerException | IndexOutOfBoundsException a) {
+				JOptionPane.showMessageDialog(null, "Najpierw wybierz wykładowcę!", "Usuwanie wykładowcy", JOptionPane.INFORMATION_MESSAGE);
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("teacher.emailTo").equals(tmp)) {
+			try {
+				teacher.emailTo();
+			} catch (NullPointerException | ArrayIndexOutOfBoundsException n) {
+				JOptionPane.showMessageDialog(null, "Najpierw wybierz wykładowcę!", "Wysyłanie e-maila", JOptionPane.INFORMATION_MESSAGE);
+			} catch (IOException | URISyntaxException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("exam.add").equals(tmp)) {
+			exam.addExam();
+		} else if (setProperties().getProperty("exam.delete").equals(tmp)) {
+			try {
+				exam.deleteExam(con);
+			} catch (NullPointerException | IndexOutOfBoundsException ee) {
+				JOptionPane.showMessageDialog(null, "Najpierw wybierz zaliczenie!", "Usuwanie zaliczenia", JOptionPane.INFORMATION_MESSAGE);
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("schedule.today").equals(tmp)) {
+			try {
+				schedule.showTodaySchedule(con);
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("schedule.tommorow").equals(tmp)) {
+			try {
+				schedule.showTommorowSchedule(con);
+			} catch (ParseException | SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("schedule.week").equals(tmp)) {
+			try {
+				schedule.showWeekSchedule();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("schedule.add").equals(tmp)) {
+			schedule.addClasses();
+		} else if (setProperties().getProperty("schedule.delete").equals(tmp)) {
+			try {
+				schedule.deleteClasses();
+			} catch (IndexOutOfBoundsException | NullPointerException ex) {
+				JOptionPane.showMessageDialog(null, "Najpierw wybierz zajęcia w widoku tygodniowym!", "Usuwanie zajęć", JOptionPane.INFORMATION_MESSAGE);
+			} catch (SQLException es) {
+				es.printStackTrace();
+			}
+		} else if (setProperties().getProperty("note.create").equals(tmp)) {
+			notes.clearNoteArea();
+		} else if (setProperties().getProperty("note.open").equals(tmp)) {
+			try {
+				notes.openFile();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("note.save").equals(tmp)) {
+			try {
+				notes.saveFile();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		} else if (setProperties().getProperty("note.openFolder").equals(tmp)) {
+			try {
+				notes.openDir();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			throw new IllegalStateException("Unexpected value: " + tmp);
 		}
 	}
 
 	@SuppressWarnings("ignored")
 	private void createFileDir() {
-		File dir = new File("UserNotes");
+		File dir = new File("Notatki");
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
 	}
-
-
-	private void setGroupLayout(Container contentPane) {
-		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
-		contentPane.setLayout(contentPaneLayout);
-		contentPaneLayout.setHorizontalGroup(
-				contentPaneLayout.createParallelGroup()
-						.addGroup(contentPaneLayout.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(tabPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGap(5, 5, 5))
-		);
-		contentPaneLayout.setVerticalGroup(
-				contentPaneLayout.createParallelGroup()
-						.addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-								.addComponent(tabPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addContainerGap())
-		);
-		setLocationRelativeTo(getOwner());
-		GroupLayout tabPanelLayout = new GroupLayout(tabPanel);
-		tabPanel.setLayout(tabPanelLayout);
-		tabPanelLayout.setHorizontalGroup(
-				tabPanelLayout.createParallelGroup()
-						.addComponent(tabs, GroupLayout.Alignment.TRAILING)
-		);
-		tabPanelLayout.setVerticalGroup(
-				tabPanelLayout.createParallelGroup()
-						.addGroup(tabPanelLayout.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(tabs, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
-		);
-	}
-
-
 }
