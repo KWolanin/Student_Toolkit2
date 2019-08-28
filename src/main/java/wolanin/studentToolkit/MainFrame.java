@@ -319,25 +319,6 @@ public class MainFrame extends JFrame {
 		}
 	}
 
-	/*public static void setTableProp(JPanel panel, JTable table, DefaultTableModel tablemodel) {
-		table.setModel(tablemodel);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		panel.add(table, BorderLayout.CENTER);
-		panel.add(table.getTableHeader(), BorderLayout.NORTH);
-		table.setAutoCreateRowSorter(true);
-		panel.updateUI();
-	}
-
-	public static void setTableModelProp(String[] columnNames) {
-		tableModel = new DefaultTableModel(columnNames, 0) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};*/
-
-
 
 	private void setGroupLayout(Container contentPane) {
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
