@@ -1,5 +1,6 @@
 package wolanin.studentToolkit.grade;
 
+import wolanin.studentToolkit.database.DatabaseFlow;
 import wolanin.studentToolkit.MainFrame;
 import wolanin.studentToolkit.table.TableFormat;
 
@@ -9,7 +10,7 @@ import java.sql.*;
 import static wolanin.studentToolkit.MainFrame.*;
 import static wolanin.studentToolkit.table.TableFormat.tableModel;
 
-public class Grade {
+public class Grade implements DatabaseFlow {
 
 	private Statement stmt;
 	private ResultSet rs;
@@ -18,14 +19,14 @@ public class Grade {
 
 	}
 
-	public void addGrade(Connection connection) {
-		new AddingGradeFrame().setVisible(true);
-		try {
-			showGrades(connection);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+//	public void addGrade(Connection connection) {
+//		new AddingGradeFrame().setVisible(true);
+//		try {
+//			showGrades(connection);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	public void showGrades(Connection con) throws SQLException, NullPointerException {
 		stmt = con.createStatement();
@@ -57,19 +58,19 @@ public class Grade {
 		executeShowGrades();
 	}
 
-	public void deleteGrade() throws SQLException {
-		int row = gradesTable.getSelectedRow();
-		String selectedName = "" + gradesTable.getValueAt(row, 0);
-		String selectedKind = "" + gradesTable.getValueAt(row, 4);
-		String selectedEcts = "" + gradesTable.getValueAt(row, 3);
-		String sql = "delete from grades where name=? and examKind=? and ects=?";
-		PreparedStatement ps = MainFrame.con.prepareStatement(sql);
-		ps.setString(1, selectedName);
-		ps.setString(2, selectedKind);
-		ps.setString(3, selectedEcts);
-		ps.executeUpdate();
-		showGrades(MainFrame.con);
-	}
+//	public void deleteGrade() throws SQLException {
+//		int row = gradesTable.getSelectedRow();
+//		String selectedName = "" + gradesTable.getValueAt(row, 0);
+//		String selectedKind = "" + gradesTable.getValueAt(row, 4);
+//		String selectedEcts = "" + gradesTable.getValueAt(row, 3);
+//		String sql = "delete from grades where name=? and examKind=? and ects=?";
+//		PreparedStatement ps = MainFrame.con.prepareStatement(sql);
+//		ps.setString(1, selectedName);
+//		ps.setString(2, selectedKind);
+//		ps.setString(3, selectedEcts);
+//		ps.executeUpdate();
+//		showGrades(MainFrame.con);
+//	}
 
 	public void calcAverage() throws SQLException {
 		double sum = 0;
@@ -88,4 +89,28 @@ public class Grade {
 		JOptionPane.showMessageDialog(null, msg, "Wyliczanie średniej", JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	@Override
+	public void addToBase(Connection connection) {
+		new AddingGradeFrame().setVisible(true);
+		try {
+			showGrades(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deleteFromBase(Connection connection) throws SQLException {
+		int row = gradesTable.getSelectedRow();
+		String selectedName = "" + gradesTable.getValueAt(row, 0);
+		String selectedKind = "" + gradesTable.getValueAt(row, 4);
+		String selectedEcts = "" + gradesTable.getValueAt(row, 3);
+		String sql = "delete from grades where name=? and examKind=? and ects=?";
+		PreparedStatement ps = MainFrame.con.prepareStatement(sql);
+		ps.setString(1, selectedName);
+		ps.setString(2, selectedKind);
+		ps.setString(3, selectedEcts);
+		ps.executeUpdate();
+		showGrades(MainFrame.con);
+	}
 }

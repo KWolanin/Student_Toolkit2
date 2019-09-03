@@ -1,5 +1,6 @@
 package wolanin.studentToolkit.schedule;
 
+import wolanin.studentToolkit.database.DatabaseFlow;
 import wolanin.studentToolkit.MainFrame;
 import wolanin.studentToolkit.table.TableFormat;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class Schedule {
+public class Schedule implements DatabaseFlow {
 
 	private Statement stmt;
 	private ResultSet rs;
@@ -57,10 +58,10 @@ public class Schedule {
 		executeShowSchedule(sql2, connection);
 	}
 
-	public void showWeekSchedule() throws SQLException {
+	public void showWeekSchedule(Connection connection) throws SQLException {
 		MainFrame.scheduleLabel.setText("Zajęcia w tygodniu:");
 		String sql = "select name, startHour, endHour, room, dayofweek from classes";
-		stmt = MainFrame.con.createStatement();
+		stmt = connection.createStatement();
 		rs = stmt.executeQuery(sql);
 		columnNames = new String[]{"Przedmiot", "Godzina rozpoczęcia", "Godzina zakończenia", "Sala", "Dzień"};
 		TableFormat.setTableModelProp(columnNames);
@@ -78,27 +79,27 @@ public class Schedule {
 		stmt.close();
 	}
 
-	public void addClasses() {
-		new AddingClassesFrame().setVisible(true);
-		try {
-			showWeekSchedule();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+//	public void addClasses(Connection connection) {
+//		new AddingClassesFrame().setVisible(true);
+//		try {
+//			showWeekSchedule(connection);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
-	public void deleteClasses() throws SQLException, ArrayIndexOutOfBoundsException {
-		int row = MainFrame.scheduleTable.getSelectedRow();
-		String selectedName = "" + MainFrame.scheduleTable.getValueAt(row, 0);
-		String selectedStartHour = "" + MainFrame.scheduleTable.getValueAt(row, 1);
-		String day = "" + MainFrame.scheduleTable.getValueAt(row, 4);
-		PreparedStatement ps = MainFrame.con.prepareStatement("delete from classes where name=? and startHour=? and dayofweek=?;");
-		ps.setString(1, selectedName);
-		ps.setString(2, selectedStartHour);
-		ps.setString(3, day);
-		ps.executeUpdate();
-		showWeekSchedule();
-	}
+//	public void deleteClasses() throws SQLException, ArrayIndexOutOfBoundsException {
+//		int row = MainFrame.scheduleTable.getSelectedRow();
+//		String selectedName = "" + MainFrame.scheduleTable.getValueAt(row, 0);
+//		String selectedStartHour = "" + MainFrame.scheduleTable.getValueAt(row, 1);
+//		String day = "" + MainFrame.scheduleTable.getValueAt(row, 4);
+//		PreparedStatement ps = MainFrame.con.prepareStatement("delete from classes where name=? and startHour=? and dayofweek=?;");
+//		ps.setString(1, selectedName);
+//		ps.setString(2, selectedStartHour);
+//		ps.setString(3, day);
+//		ps.executeUpdate();
+//		showWeekSchedule();
+//	}
 
 	private static String getTodayDateToString() {
 		GregorianCalendar calendar = new GregorianCalendar();
@@ -135,4 +136,28 @@ public class Schedule {
 		return format.format(yourDate);
 	}
 
+
+	@Override
+	public void addToBase(Connection connection) {
+		new AddingClassesFrame().setVisible(true);
+		try {
+			showWeekSchedule(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deleteFromBase(Connection connection) throws SQLException {
+		int row = MainFrame.scheduleTable.getSelectedRow();
+		String selectedName = "" + MainFrame.scheduleTable.getValueAt(row, 0);
+		String selectedStartHour = "" + MainFrame.scheduleTable.getValueAt(row, 1);
+		String day = "" + MainFrame.scheduleTable.getValueAt(row, 4);
+		PreparedStatement ps = MainFrame.con.prepareStatement("delete from classes where name=? and startHour=? and dayofweek=?;");
+		ps.setString(1, selectedName);
+		ps.setString(2, selectedStartHour);
+		ps.setString(3, day);
+		ps.executeUpdate();
+		showWeekSchedule(connection);
+	}
 }

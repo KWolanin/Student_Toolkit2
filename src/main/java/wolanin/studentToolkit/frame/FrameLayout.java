@@ -24,7 +24,6 @@ public class FrameLayout {
 								.addComponent(tabPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addContainerGap())
 		);
-		//frame.setLocationRelativeTo(getOwner());
 		GroupLayout tabPanelLayout = new GroupLayout(tabPanel);
 		tabPanel.setLayout(tabPanelLayout);
 		tabPanelLayout.setHorizontalGroup(

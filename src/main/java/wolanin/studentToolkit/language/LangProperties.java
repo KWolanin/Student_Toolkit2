@@ -17,7 +17,6 @@ public class LangProperties {
 		}
 		Properties properties = new Properties();
 		properties.load(fileInputStream);
-
 		return properties;
 	}
 }

@@ -1,5 +1,6 @@
 package wolanin.studentToolkit.teacher;
 
+import wolanin.studentToolkit.database.DatabaseFlow;
 import wolanin.studentToolkit.MainFrame;
 
 import java.awt.*;
@@ -11,7 +12,7 @@ import java.sql.*;
 import static java.awt.Desktop.getDesktop;
 import static wolanin.studentToolkit.table.TableFormat.*;
 
-public class Teacher {
+public class Teacher implements DatabaseFlow {
 
 	public Teacher() {
 	}
@@ -20,11 +21,11 @@ public class Teacher {
 
 	public void showTeachers(Connection connection) throws SQLException {
 		Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery("SELECT first_name, last_name, email, title FROM teachers;");
+		ResultSet rs = stmt.executeQuery("SELECT firstName, lastName, email, title FROM teachers;");
 		String[] columnNames = new String[]{"Imię", "Nazwisko", "E-mail", "Stopień naukowy / tytuł zawodowy"};
 		setTableModelProp(columnNames);
 		while (rs.next()) {
-			String firstName = rs.getString("first_name");
+			String firstName = rs.getString("firstName");
 			String lastName = rs.getString("last_name");
 			String email = rs.getString("title");
 			String title = rs.getString("email");
@@ -35,25 +36,25 @@ public class Teacher {
 		rs.close();
 		stmt.close();
 	}
-
-	public void addTeacher(Connection connection) {
-		new AddingTeacherFrame().setVisible(true);
-		try {
-			showTeachers(connection);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void deleteTeacher(Connection con) throws SQLException {
-		row = MainFrame.teacherTable.getSelectedRow();
-		String selected = "" + MainFrame.teacherTable.getValueAt(row, 2);
-		String sql = "delete from teachers where email=?";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setString(1, selected);
-		ps.executeUpdate();
-		showTeachers(con);
-	}
+//
+//	public void addTeacher(Connection connection) {
+//		new AddingTeacherFrame().setVisible(true);
+//		try {
+//			showTeachers(connection);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	public void deleteTeacher(Connection con) throws SQLException {
+//		row = MainFrame.teacherTable.getSelectedRow();
+//		String selected = "" + MainFrame.teacherTable.getValueAt(row, 2);
+//		String sql = "delete from teachers where email=?";
+//		PreparedStatement ps = con.prepareStatement(sql);
+//		ps.setString(1, selected);
+//		ps.executeUpdate();
+//		showTeachers(con);
+//	}
 
 	public void emailTo() throws URISyntaxException, IOException {
 		row = MainFrame.teacherTable.getSelectedRow();
@@ -64,4 +65,24 @@ public class Teacher {
 		desktop.mail(new URI(email));
 	}
 
+	@Override
+	public void addToBase(Connection connection) {
+		new AddingTeacherFrame().setVisible(true);
+		try {
+			showTeachers(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deleteFromBase(Connection connection) throws SQLException {
+		row = MainFrame.teacherTable.getSelectedRow();
+		String selected = "" + MainFrame.teacherTable.getValueAt(row, 2);
+		String sql = "delete from teachers where email=?";
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setString(1, selected);
+		ps.executeUpdate();
+		showTeachers(connection);
+	}
 }

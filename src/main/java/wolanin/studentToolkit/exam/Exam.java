@@ -1,26 +1,16 @@
 package wolanin.studentToolkit.exam;
 
+import wolanin.studentToolkit.database.DatabaseFlow;
 import wolanin.studentToolkit.MainFrame;
 import wolanin.studentToolkit.table.TableFormat;
 
 import java.sql.*;
 
-public class Exam {
+public class Exam implements DatabaseFlow {
 
 	public Exam() {
 	}
 
-	public void deleteExam(Connection conection) throws SQLException {
-		int row = MainFrame.examTable.getSelectedRow();
-		String selectedName = "" + MainFrame.examTable.getValueAt(row, 0);
-		String selectedType = "" + MainFrame.examTable.getValueAt(row, 1);
-		String sql = "delete from exams where name=? and type=?";
-		PreparedStatement ps = conection.prepareStatement(sql);
-		ps.setString(1, selectedName);
-		ps.setString(2, selectedType);
-		ps.executeUpdate();
-		showExams(conection);
-	}
 
 	public void showExams(Connection connection) throws SQLException {
 		String sql = "select * from exams";
@@ -42,12 +32,26 @@ public class Exam {
 		stmt.close();
 	}
 
-	public void addExam() {
+	@Override
+	public void addToBase(Connection connection) {
 		new AddingExamFrame().setVisible(true);
 		try {
-			showExams(MainFrame.con);
+			showExams(connection);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void deleteFromBase(Connection connection) throws SQLException {
+		int row = MainFrame.examTable.getSelectedRow();
+		String selectedName = "" + MainFrame.examTable.getValueAt(row, 0);
+		String selectedType = "" + MainFrame.examTable.getValueAt(row, 1);
+		String sql = "delete from exams where name=? and type=?";
+		PreparedStatement ps = connection.prepareStatement(sql);
+		ps.setString(1, selectedName);
+		ps.setString(2, selectedType);
+		ps.executeUpdate();
+		showExams(connection);
 	}
 }

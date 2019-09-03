@@ -136,8 +136,8 @@ DROP TABLE IF EXISTS `teachers`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `teachers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(30) NOT NULL,
-  `last_name` varchar(40) NOT NULL,
+  firstName varchar(30) NOT NULL,
+  lastName varchar(40) NOT NULL,
   `title` varchar(15) DEFAULT NULL,
   `email` varchar(25) DEFAULT NULL,
   PRIMARY KEY (`id`)

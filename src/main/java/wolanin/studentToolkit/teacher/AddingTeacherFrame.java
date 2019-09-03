@@ -46,7 +46,7 @@ class AddingTeacherFrame extends JDialog {
 			JOptionPane.showMessageDialog(null, "Wpisz poprawne dane!", "Dodawanie wykładowcy", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			try {
-				PreparedStatement ps = MainFrame.con.prepareStatement("insert into teachers(first_name, last_name, title, email) values(?,?,?,?)");
+				PreparedStatement ps = MainFrame.con.prepareStatement("insert into teachers(firstName, lastName, title, email) values(?,?,?,?)");
 				ps.setString(1, firstName);
 				ps.setString(2, lastName);
 				ps.setString(3, title);

@@ -1,6 +1,6 @@
 package wolanin.studentToolkit.frame;
 
-import wolanin.studentToolkit.MainFrame;
+import wolanin.studentToolkit.AppLogic;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,7 @@ public class FormatFrame {
 		toolbarName.add(button);
 		button.addActionListener(e -> {
 			try {
-				MainFrame.listenerChooser(e);
+				AppLogic.listenerChooser(e);
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
