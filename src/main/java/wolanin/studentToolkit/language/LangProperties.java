@@ -11,7 +11,8 @@ public class LangProperties {
 	public static Properties setProperties() throws IOException {
 		FileInputStream fileInputStream;
 		if (MainFrame.PLlang) {
-			fileInputStream = new FileInputStream("polishLang.properties");
+			fileInputStream = new FileInputStream("src\\main\\resources\\polishLang.properties");
+
 		} else {
 			fileInputStream = new FileInputStream("englishLang.properties");
 		}
