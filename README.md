@@ -3,6 +3,10 @@
 ## Polski:
 Projekt zaliczeniowy z przykładową bazą danych - program pozwalający studentowi zarządzać swoimi ocenami, terminami zaliczeń, planem zajęć i kontaktem do wykładowców, a także umożliwia tworzenie prostych notatek.
 
+Baza: MySQL (JDBC), planowana migracja na H2 (Hibernate, Flyway)
+UI: Swing
+Inne narzędzia: Maven
+
 ## English:
 Java programming coursework with example database. A program allows students to manage their grades, exams dates, and schedule. The program also allows to make quick notes and create e-mail base with lecturer's addresses. Only Polish language version - just for now.
 
