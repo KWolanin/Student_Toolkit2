@@ -1,12 +1,15 @@
 package wolanin.studentToolkit.dbHibernate;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 class Exams {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String name;
 	private String type;
@@ -34,35 +37,35 @@ class Exams {
 		this.name = name;
 	}
 
-	public String getType() {
+	String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	void setType(String type) {
 		this.type = type;
 	}
 
-	public String getDate() {
+	String getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	void setDate(String date) {
 		this.date = date;
 	}
 
-	public String getHour() {
+	String getHour() {
 		return hour;
 	}
 
-	public void setHour(String hour) {
+	void setHour(String hour) {
 		this.hour = hour;
 	}
 
-	public int getRoom() {
+	int getRoom() {
 		return room;
 	}
 
-	public void setRoom(int room) {
+	void setRoom(int room) {
 		this.room = room;
 	}
 }

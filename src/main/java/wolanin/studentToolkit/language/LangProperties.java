@@ -1,6 +1,6 @@
 package wolanin.studentToolkit.language;
 
-import wolanin.studentToolkit.MainFrame;
+import wolanin.studentToolkit.frames.MainFrame;
 
 import java.io.FileInputStream;
 import java.io.IOException;

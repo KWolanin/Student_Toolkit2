@@ -1,6 +1,6 @@
 package wolanin.studentToolkit.notes;
 
-import wolanin.studentToolkit.MainFrame;
+import wolanin.studentToolkit.frames.MainFrame;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

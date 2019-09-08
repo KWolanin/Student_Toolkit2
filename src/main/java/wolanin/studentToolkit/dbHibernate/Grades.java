@@ -1,12 +1,13 @@
 package wolanin.studentToolkit.dbHibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "grades")
 class Grades {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String name;
 	private int ects;
@@ -33,31 +34,31 @@ class Grades {
 		this.name = name;
 	}
 
-	public int getEcts() {
+	int getEcts() {
 		return ects;
 	}
 
-	public void setEcts(int ects) {
+	void setEcts(int ects) {
 		this.ects = ects;
 	}
 
-	public String getType() {
+	String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	void setType(String type) {
 		this.type = type;
 	}
 
-	public float getGrade() {
+	float getGrade() {
 		return grade;
 	}
 
-	public void setGrade(float grade) {
+	void setGrade(float grade) {
 		this.grade = grade;
 	}
 
-	public String getExamKind() {
+	String getExamKind() {
 		return examKind;
 	}
 

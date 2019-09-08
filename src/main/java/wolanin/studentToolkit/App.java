@@ -1,6 +1,8 @@
 package wolanin.studentToolkit;
 
 
+import wolanin.studentToolkit.frames.MainFrame;
+
 import javax.swing.*;
 import java.io.IOException;
 

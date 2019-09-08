@@ -1,18 +1,18 @@
 package wolanin.studentToolkit.dbHibernate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 class Classes {
 
 	@Id
-	int id;
-	String name;
-	String dayofweek;
-	String startHour;
-	String endHour;
-	int room;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+	private String name;
+	private String dayofweek;
+	private String startHour;
+	private String endHour;
+	private int room;
 
 	public Classes() {
 	}
@@ -33,35 +33,35 @@ class Classes {
 		this.name = name;
 	}
 
-	public String getDayofweek() {
+	String getDayofweek() {
 		return dayofweek;
 	}
 
-	public void setDayofweek(String dayofweek) {
+	void setDayofweek(String dayofweek) {
 		this.dayofweek = dayofweek;
 	}
 
-	public String getStartHour() {
+	String getStartHour() {
 		return startHour;
 	}
 
-	public void setStartHour(String startHour) {
+	void setStartHour(String startHour) {
 		this.startHour = startHour;
 	}
 
-	public String getEndHour() {
+	String getEndHour() {
 		return endHour;
 	}
 
-	public void setEndHour(String endHour) {
+	void setEndHour(String endHour) {
 		this.endHour = endHour;
 	}
 
-	public int getRoom() {
+	int getRoom() {
 		return room;
 	}
 
-	public void setRoom(int room) {
+	void setRoom(int room) {
 		this.room = room;
 	}
 }

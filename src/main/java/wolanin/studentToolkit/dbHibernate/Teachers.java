@@ -1,12 +1,15 @@
 package wolanin.studentToolkit.dbHibernate;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 class Teachers {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	private String firstName;
 	private String lastName;
@@ -24,35 +27,35 @@ class Teachers {
 		this.id = id;
 	}
 
-	public String getFirstName() {
+	String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
+	void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String getLastName() {
+	String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName) {
+	void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-	public String getTitle() {
+	String getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	void setTitle(String title) {
 		this.title = title;
 	}
 
-	public String getEmail() {
+	String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	void setEmail(String email) {
 		this.email = email;
 	}
 }
