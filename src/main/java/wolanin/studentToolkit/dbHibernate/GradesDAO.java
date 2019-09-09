@@ -7,19 +7,29 @@ import wolanin.studentToolkit.frames.GradeFrame;
 import wolanin.studentToolkit.table.TableFormat;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
 import static wolanin.studentToolkit.frames.MainFrame.*;
 import static wolanin.studentToolkit.frames.GradeFrame.*;
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
 import static wolanin.studentToolkit.table.TableFormat.tableModel;
 
 public class GradesDAO implements HibernateDBFlow {
+	private String[] columnNames = new String[]{setProperties().getProperty("table.classesName"),
+			setProperties().getProperty("table.grade"),
+			setProperties().getProperty("table.examKind"),
+			setProperties().getProperty("table.ects"),
+			setProperties().getProperty("table.classesKind"),
+	};
+
+	public GradesDAO() throws IOException {
+	}
 
 
 	@Override
 	public void showAll(Session session) {
-		String[] columnNames = new String[]{"Przedmiot", "Ocena", "Rodzaj zaliczenia", "Punkty ECTS", "Typ zajęć"};
 		TableFormat.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Grades> grades = (List<Grades>) session.createQuery("from Grades").list();
@@ -51,10 +61,11 @@ public class GradesDAO implements HibernateDBFlow {
 		showAll(session);
 	}
 
-	public void saveToBase(Session session) {
+	public void saveToBase(Session session) throws IOException {
 		String savedName = nameField.getText();
 		if (nameField.getText().equals("")) {
-			JOptionPane.showMessageDialog(null, "Wpisz poprawne dane!", "Dodawanie oceny", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, setProperties().getProperty("badInputMsg"),
+					setProperties().getProperty("add.title"), JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			double savedGrade = (double) gradesCombo.getSelectedItem();
 			String savedKind = Objects.requireNonNull(examTypeCombo.getSelectedItem()).toString();
@@ -79,13 +90,12 @@ public class GradesDAO implements HibernateDBFlow {
 
 
 	@Override
-	public void add(Session session) {
+	public void add(Session session) throws IOException {
 		new GradeFrame().setVisible(true);
 		showAll(session);
 	}
 
-	public void showFailedByHibernate(Session session) {
-		String[] columnNames = new String[]{"Przedmiot", "Ocena", "Rodzaj zaliczenia", "Punkty ECTS", "Typ zajęć"};
+	public void showFailed(Session session) {
 		TableFormat.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Grades> grades = (List<Grades>) session.createQuery("from Grades where grade<3 and type !='zaliczenie bez oceny'").list();
@@ -101,7 +111,7 @@ public class GradesDAO implements HibernateDBFlow {
 		TableFormat.setTableProp(gradesPanel, gradesTable, tableModel);
 	}
 
-	public void calcAverageByHibernate(Session session) {
+	public void calcAverageByHibernate(Session session) throws IOException {
 		float sum = 0.0f;
 		float wage = 0.0f;
 		@SuppressWarnings("unchecked")
@@ -112,7 +122,8 @@ public class GradesDAO implements HibernateDBFlow {
 			sum = sum + (value.getGrade() * value.getEcts());
 		}
 		float result = sum / wage;
-		String msg = "Twoja średnia ważona z egzaminów to: " + String.format("%.02f", result);
-		JOptionPane.showMessageDialog(null, msg, "Wyliczanie średniej", JOptionPane.INFORMATION_MESSAGE);
+		String msg = setProperties().getProperty("grade.average.msg") + String.format("%.02f", result);
+		JOptionPane.showMessageDialog(null, msg,
+				setProperties().getProperty("grade.average.title"), JOptionPane.INFORMATION_MESSAGE);
 	}
 }

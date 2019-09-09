@@ -15,7 +15,7 @@ import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 
 public class MainFrame extends JFrame {
-	public static final JTabbedPane tabs = new JTabbedPane();
+	static final JTabbedPane tabs = new JTabbedPane();
 	private final JLabel grades = new JLabel();
 	private final JLabel teachers = new JLabel();
 	private final JLabel labelClasses = new JLabel();
@@ -48,7 +48,7 @@ public class MainFrame extends JFrame {
 	public static final JTable examTable = new JTable();
 
 	public static final Notes notes = new Notes();
-	public static final boolean PLlang = true;
+	public static boolean PLlang = true;
 
 	public static Session session;
 
@@ -62,7 +62,12 @@ public class MainFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				GradesDAO g = new GradesDAO();
+				GradesDAO g = null;
+				try {
+					g = new GradesDAO();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				TeacherDAO t = new TeacherDAO();
 				ExamsDAO ex = new ExamsDAO();
 				ClassesDAO c = new ClassesDAO();

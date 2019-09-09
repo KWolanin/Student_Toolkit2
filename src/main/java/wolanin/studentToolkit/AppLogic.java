@@ -18,7 +18,16 @@ import static wolanin.studentToolkit.language.LangProperties.setProperties;
 public class AppLogic {
 
 	private static final TeacherDAO t = new TeacherDAO();
-	private static final GradesDAO g = new GradesDAO();
+	private static GradesDAO g = null;
+
+	static {
+		try {
+			g = new GradesDAO();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static final ExamsDAO em = new ExamsDAO();
 	private static final ClassesDAO c = new ClassesDAO();
 
@@ -51,7 +60,7 @@ public class AppLogic {
 				ex.printStackTrace();
 			}
 		} else if (setProperties().getProperty("grade.showUnpassed").equals(tmp)) {
-			g.showFailedByHibernate(session);
+			g.showFailed(session);
 
 		} else if (setProperties().getProperty("teacher.add").equals(tmp)) {
 			t.add(session);

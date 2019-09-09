@@ -2,6 +2,8 @@ package wolanin.studentToolkit.dbHibernate;
 
 import org.hibernate.Session;
 
+import java.io.IOException;
+
 
 interface HibernateDBFlow {
 
@@ -9,6 +11,6 @@ interface HibernateDBFlow {
 
 	void delete(Session session);
 
-	void add(Session session);
+	void add(Session session) throws IOException;
 
 }
