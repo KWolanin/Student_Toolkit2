@@ -7,6 +7,7 @@ import wolanin.studentToolkit.frames.ClassesFrame;
 import wolanin.studentToolkit.table.TableFormat;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
@@ -14,13 +15,22 @@ import java.util.Objects;
 
 import static wolanin.studentToolkit.frames.MainFrame.*;
 import static wolanin.studentToolkit.frames.ClassesFrame.*;
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
 import static wolanin.studentToolkit.table.TableFormat.*;
 
 public class ClassesDAO implements HibernateDBFlow {
 
+	private String[] columnNames = new String[]
+			{setProperties().getProperty("table.classesName"),
+					setProperties().getProperty("table.startHour"),
+					setProperties().getProperty("table.endHour"),
+					setProperties().getProperty("table.room"),
+					setProperties().getProperty("table.day")};
+	public ClassesDAO() throws IOException {
+	}
+
 	@Override
 	public void showAll(Session session) {
-		String[] columnNames = new String[]{"Przedmiot", "Godzina rozpoczęcia", "Godzina zakończenia", "Sala", "Dzień"};
 		setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Classes> classes = (List<Classes>) session.createQuery("from Classes").list();
@@ -36,10 +46,9 @@ public class ClassesDAO implements HibernateDBFlow {
 		TableFormat.setTableProp(classesPanel, classesTable, tableModel);
 	}
 
-	public void showToday(Session session){
+	public void showToday(Session session) {
 		String today = getNameOfDay(getTodayDateToString());
-		String sql = "from Classes where dayofweek='"+today+"'";
-		String[] columnNames = new String[]{"Przedmiot", "Godzina rozpoczęcia", "Godzina zakończenia", "Sala"};
+		String sql = "from Classes where dayofweek='" + today + "'";
 		TableFormat.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Classes> classes = (List<Classes>) session.createQuery(sql).list();
@@ -65,8 +74,7 @@ public class ClassesDAO implements HibernateDBFlow {
 			e.printStackTrace();
 		}
 		String tommorowName = getNameOfDay(x);
-		String sqle = "from Classes where dayofweek='"+tommorowName+"'";
-		String[] columnNames = new String[]{"Przedmiot", "Godzina rozpoczęcia", "Godzina zakończenia", "Sala"};
+		String sqle = "from Classes where dayofweek='" + tommorowName + "'";
 		TableFormat.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Classes> classes = (List<Classes>) session.createQuery(sqle).list();
@@ -97,20 +105,20 @@ public class ClassesDAO implements HibernateDBFlow {
 	}
 
 	@Override
-	public void add(Session session) {
+	public void add(Session session) throws IOException {
 		new ClassesFrame().setVisible(true);
 		showAll(MainFrame.session);
 	}
 
-	public void addToBase(Session session) {
+	public void addToBase(Session session) throws IOException {
 		String classesName = ClassesFrame.nameField.getText();
 		String dayofWeek = Objects.requireNonNull(dayCombo.getSelectedItem()).toString();
 		String startHour = startHourPicker.getText();
 		String endHour = endHourPicker.getText();
-
 		int room = Integer.parseInt(ClassesFrame.roomField.getText());
 		if (classesName.equals("") | room == 0) {
-			JOptionPane.showMessageDialog(null, "Wpisz poprawne dane!", "Dodawanie zajęć", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, setProperties().getProperty("badInputMsg"),
+					setProperties().getProperty("add.title.classes"), JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			session.beginTransaction();
 			Classes classes = new Classes();

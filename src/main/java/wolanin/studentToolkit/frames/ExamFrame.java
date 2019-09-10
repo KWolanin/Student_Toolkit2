@@ -6,17 +6,32 @@ import wolanin.studentToolkit.dbHibernate.ExamsDAO;
 
 
 import javax.swing.*;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
+
 
 public class ExamFrame extends JDialog {
 
 	public static final JTextField nameField = new JTextField();
-	private static final String[] examTypesArray = {"egzamin", "zaliczenie z ocena", "zaliczenie bez oceny"};
+
+	private static String[] examTypesArray;
+
+	static {
+		try {
+			examTypesArray = new String[]{setProperties().getProperty("exam"),
+					setProperties().getProperty("withGrade"),
+					setProperties().getProperty("withoutGrade")};
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static final JComboBox<String> typeCombo = new JComboBox<>(examTypesArray);
 	public static final JTextField roomField = new JTextField();
 	public static final JDatePicker datePicker = new JDatePicker();
@@ -24,39 +39,44 @@ public class ExamFrame extends JDialog {
 	private final ExamsDAO ex = new ExamsDAO();
 
 
-	public ExamFrame() {
+	public ExamFrame() throws IOException {
 		JPanel panel = new JPanel();
-		JButton save = FormatFrame.createDialog(this, panel, "Dodawanie zaliczenia", 5, 2);
-		JLabel name = new JLabel("Nazwa: ");
+		JButton save = FormatFrame.createDialog(this, panel, setProperties().getProperty("add.title.exams"), 5);
+		JLabel name = new JLabel(setProperties().getProperty("table.classesName"));
 		panel.add(name);
 		panel.add(nameField);
-		JLabel type = new JLabel("Typ: ");
+		JLabel type = new JLabel(setProperties().getProperty("table.examKind"));
 		panel.add(type);
 		panel.add(typeCombo);
-		JLabel date = new JLabel("Data: ");
+		JLabel date = new JLabel(setProperties().getProperty("table.date"));
 		panel.add(date);
 		panel.add(datePicker);
-		JLabel hour = new JLabel("Godzina: ");
+		JLabel hour = new JLabel(setProperties().getProperty("table.hour"));
 		panel.add(hour);
 		panel.add(timePicker);
-		JLabel room = new JLabel("Sala: ");
+		JLabel room = new JLabel(setProperties().getProperty("table.room"));
 		panel.add(room);
 		panel.add(roomField);
 		save.addActionListener(e -> {
-			ex.addToBase(MainFrame.session);
+			try {
+				ex.addToBase(MainFrame.session);
+			} catch (IOException exc) {
+				exc.printStackTrace();
+			}
 			dispose();
 		});
 	}
 
-	public static String changeDateFormat(String date) {
-		DateFormat defaultPickerFormat = new SimpleDateFormat("dd MMM yyyy", new Locale("pl"));
+	public static String changeDateFormat(String date) throws IOException {
+		DateFormat defaultPickerFormat = new SimpleDateFormat("dd MMM yyyy",
+				new Locale(setProperties().getProperty("locale")));
 		DateFormat standardDataFormat = new SimpleDateFormat("dd.MM.yyyy");
-		Date standartDate = null;
+		Date standardDate = null;
 		try {
-			standartDate = defaultPickerFormat.parse(date);
+			standardDate = defaultPickerFormat.parse(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return standardDataFormat.format(standartDate);
+		return standardDataFormat.format(standardDate);
 	}
 }

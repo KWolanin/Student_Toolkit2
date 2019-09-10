@@ -17,19 +17,19 @@ import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 public class AppLogic {
 
-	private static final TeacherDAO t = new TeacherDAO();
-	private static GradesDAO g = null;
-
+	/*private static  TeacherDAO t = new TeacherDAO();
+	private static GradesDAO g = new GradesDAO();
+	private static  ExamsDAO em = new ExamsDAO();
+	private static  ClassesDAO c = new ClassesDAO();*/
+	/*
 	static {
 		try {
 			g = new GradesDAO();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static final ExamsDAO em = new ExamsDAO();
-	private static final ClassesDAO c = new ClassesDAO();
+	}*/
 
 
 	@SuppressWarnings("Result of method call ignored")
@@ -41,6 +41,10 @@ public class AppLogic {
 	}
 
 	public static void listenerChooser(ActionEvent e) throws IOException {
+		TeacherDAO t = new TeacherDAO();
+		GradesDAO g = new GradesDAO();
+		ExamsDAO em = new ExamsDAO();
+		ClassesDAO c = new ClassesDAO();
 		String tmp = e.getActionCommand();
 		if (setProperties().getProperty("grade.average").equals(tmp)) {
 			g.calcAverageByHibernate(session);

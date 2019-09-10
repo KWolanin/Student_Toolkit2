@@ -42,7 +42,7 @@ public class GradeFrame extends JDialog {
 
 	public GradeFrame() throws IOException {
 		JPanel panel = new JPanel();
-		JButton save = FormatFrame.createDialog(this, panel, setProperties().getProperty("add.title"), 5, 2);
+		JButton save = FormatFrame.createDialog(this, panel, setProperties().getProperty("add.title"), 5);
 		JLabel name = new JLabel(setProperties().getProperty("add.grade.name"));
 		panel.add(name);
 		panel.add(nameField);

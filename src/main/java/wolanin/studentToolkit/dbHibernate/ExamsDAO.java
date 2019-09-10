@@ -8,17 +8,35 @@ import wolanin.studentToolkit.table.TableFormat;
 
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
 
 import static wolanin.studentToolkit.frames.ExamFrame.*;
 import static wolanin.studentToolkit.frames.MainFrame.*;
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
 import static wolanin.studentToolkit.table.TableFormat.tableModel;
 
 public class ExamsDAO implements HibernateDBFlow {
+
+
+	private String[] columnNames;
+	{
+		try {
+			columnNames = new String[]{
+					setProperties().getProperty("table.classesName"),
+					setProperties().getProperty("table.examKind"),
+					setProperties().getProperty("table.date"),
+					setProperties().getProperty("table.hour"),
+					setProperties().getProperty("table.room")
+			};
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void showAll(Session session) {
-		String[] columnNames = new String[]{"Przedmiot", "Rodzaj zaliczenia", "Data", "Godzina", "Sala"};
 		TableFormat.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Exams> exams = (List<Exams>) session.createQuery("from Exams").list();
@@ -47,12 +65,12 @@ public class ExamsDAO implements HibernateDBFlow {
 	}
 
 	@Override
-	public void add(Session session) {
+	public void add(Session session) throws IOException {
 		new ExamFrame().setVisible(true);
 		showAll(session);
 	}
 
-	public void addToBase(Session session) {
+	public void addToBase(Session session) throws IOException {
 		String examName = ExamFrame.nameField.getText();
 		String type = (String) typeCombo.getSelectedItem();
 		String hour = timePicker.getText();
@@ -65,7 +83,7 @@ public class ExamsDAO implements HibernateDBFlow {
 			e.getMessage();
 		}
 		if (examName.equals("") | date.equals("") | hour.equals("") | room == 0) {
-			JOptionPane.showMessageDialog(null, "Wpusz brakujące dane!");
+			JOptionPane.showMessageDialog(null, setProperties().getProperty("badInputMsg"));
 		} else {
 			session.beginTransaction();
 			Exams exams = new Exams();

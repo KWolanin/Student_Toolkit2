@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.IOException;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 class FormatFrame {
 
@@ -15,14 +16,14 @@ class FormatFrame {
 	private static final Insets insetsToolbar = new Insets(15, 5, 5, 5);
 
 
-	static JButton createDialog(JDialog dialog, JPanel panel, String title, int row, int col) {
+	static JButton createDialog(JDialog dialog, JPanel panel, String title, int row) throws IOException {
 		dialog.setModal(true);
 		dialog.setSize(400, 200);
 		dialog.setTitle(title);
 		dialog.setLocationRelativeTo(dialog.getOwner());
 		Container contentPane = dialog.getContentPane();
-		panel.setLayout(new GridLayout(row, col));
-		JButton save = new JButton("Zapisz");
+		panel.setLayout(new GridLayout(row, 2));
+		JButton save = new JButton(setProperties().getProperty("save.button"));
 		contentPane.add(save, BorderLayout.SOUTH);
 		contentPane.add(panel, BorderLayout.CENTER);
 		dialog.setResizable(true);

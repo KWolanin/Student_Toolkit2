@@ -5,12 +5,14 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
+import static wolanin.studentToolkit.frames.FormatFrame.setFrameCenter;
+
 
 public class LangFrame extends JFrame {
 
-	private String[] langs = {"Polski", "English"};
-	private JComboBox<String> langCombo = new JComboBox<>(langs);
-	private JButton save = new JButton("Zapisz | Save");
+	private final String[] langs = {"Polski", "English"};
+	private final JComboBox<String> langCombo = new JComboBox<>(langs);
+	private final JButton save = new JButton("Zapisz | Save");
 
 	public LangFrame() {
 		initComponents();
@@ -19,7 +21,9 @@ public class LangFrame extends JFrame {
 	}
 
 	private void initComponents() {
-		FormatFrame.setFrameCenter(this);
+		setFrameCenter(this);
+		setFrameCenter(this);
+		setIconImage(new ImageIcon("src\\main\\resources\\student.png").getImage());
 		setResizable(false);
 		setTitle("Język | Language");
 		setLocationRelativeTo(getOwner());
@@ -29,7 +33,7 @@ public class LangFrame extends JFrame {
 		contentPane.add(langCombo);
 		contentPane.add(save);
 		save.addActionListener(e -> {
-			MainFrame.PLlang = Objects.equals(langCombo.getSelectedItem(), "Polski");
+					MainFrame.PLlang = Objects.equals(langCombo.getSelectedItem(), "Polski");
 					try {
 						new MainFrame();
 						dispose();
@@ -40,6 +44,4 @@ public class LangFrame extends JFrame {
 		);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
-
-
 }

@@ -17,7 +17,7 @@ import static wolanin.studentToolkit.language.LangProperties.setProperties;
 import static wolanin.studentToolkit.table.TableFormat.tableModel;
 
 public class GradesDAO implements HibernateDBFlow {
-	private String[] columnNames = new String[]{setProperties().getProperty("table.classesName"),
+	private final String[] columnNames = new String[]{setProperties().getProperty("table.classesName"),
 			setProperties().getProperty("table.grade"),
 			setProperties().getProperty("table.examKind"),
 			setProperties().getProperty("table.ects"),

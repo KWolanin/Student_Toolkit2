@@ -16,15 +16,24 @@ import java.util.Objects;
 
 import static java.awt.Desktop.getDesktop;
 import static wolanin.studentToolkit.frames.MainFrame.*;
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
 import static wolanin.studentToolkit.table.TableFormat.setTableModelProp;
 import static wolanin.studentToolkit.table.TableFormat.tableModel;
 import static wolanin.studentToolkit.frames.TeacherFrame.*;
 
 public class TeacherDAO implements HibernateDBFlow {
 
+	private String[] columnNames = new String[]{
+			setProperties().getProperty("table.firstName"),
+			setProperties().getProperty("table.lastName"),
+			setProperties().getProperty("table.email"),
+			setProperties().getProperty("table.academicDegree")};
+
+	public TeacherDAO() throws IOException {
+	}
+
 	@Override
 	public void showAll(Session session) {
-		String[] columnNames = new String[]{"Imię", "Nazwisko", "E-mail", "Stopień naukowy / tytuł zawodowy"};
 		setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Teachers> teachers = (List<Teachers>) session.createQuery("from Teachers").list();
@@ -50,18 +59,19 @@ public class TeacherDAO implements HibernateDBFlow {
 	}
 
 	@Override
-	public void add(Session session) {
+	public void add(Session session) throws IOException {
 		new TeacherFrame().setVisible(true);
 		showAll(session);
 	}
 
-	public static void saveToBase(Session session) {
+	public static void saveToBase(Session session) throws IOException {
 		String firstName = firstNameField.getText();
 		String lastName = lastNameField.getText();
 		String title = Objects.requireNonNull(titlesCombo.getSelectedItem()).toString();
 		String email = emailField.getText();
 		if (firstNameField.getText().equals("") | lastNameField.getText().equals("") | emailField.getText().equals("")) {
-			JOptionPane.showMessageDialog(null, "Wpisz poprawne dane!", "Dodawanie wykładowcy", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, setProperties().getProperty("badInputMsg"),
+					setProperties().getProperty("add.title.teachers"), JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			session.beginTransaction();
 			Teachers newTeacher = new Teachers();

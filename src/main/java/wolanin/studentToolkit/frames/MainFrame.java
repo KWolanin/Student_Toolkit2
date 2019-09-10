@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.util.Objects;
 
 import static wolanin.studentToolkit.AppLogic.createFileDir;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
@@ -68,13 +69,23 @@ public class MainFrame extends JFrame {
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
-				TeacherDAO t = new TeacherDAO();
+				TeacherDAO t = null;
+				try {
+					t = new TeacherDAO();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				ExamsDAO ex = new ExamsDAO();
-				ClassesDAO c = new ClassesDAO();
-				g.showAll(session);
-				t.showAll(session);
+				ClassesDAO c = null;
+				try {
+					c = new ClassesDAO();
+				} catch (IOException exc) {
+					exc.printStackTrace();
+				}
+				Objects.requireNonNull(g).showAll(session);
+				Objects.requireNonNull(t).showAll(session);
 				ex.showAll(session);
-				c.showAll(session);
+				Objects.requireNonNull(c).showAll(session);
 			}
 		});
 
