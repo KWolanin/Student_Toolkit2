@@ -17,21 +17,6 @@ import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 public class AppLogic {
 
-	/*private static  TeacherDAO t = new TeacherDAO();
-	private static GradesDAO g = new GradesDAO();
-	private static  ExamsDAO em = new ExamsDAO();
-	private static  ClassesDAO c = new ClassesDAO();*/
-	/*
-	static {
-		try {
-			g = new GradesDAO();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}*/
-
-
 	@SuppressWarnings("Result of method call ignored")
 	public static void createFileDir() {
 		File dir = new File("UserNotes");
@@ -54,7 +39,8 @@ public class AppLogic {
 			try {
 				g.delete(session);
 			} catch (NullPointerException | IndexOutOfBoundsException x) {
-				JOptionPane.showMessageDialog(null, "Najpierw wybierz ocenę!", "Usuwanie oceny", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, setProperties().getProperty("select.grade.first"),
+						setProperties().getProperty("remove.title"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		} else if (setProperties().getProperty("grade.fulllist").equals(tmp)) {
 			try {
@@ -73,13 +59,15 @@ public class AppLogic {
 			try {
 				t.delete(session);
 			} catch (NullPointerException | IndexOutOfBoundsException a) {
-				JOptionPane.showMessageDialog(null, "Najpierw wybierz wykładowcę!", "Usuwanie wykładowcy", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, setProperties().getProperty("select.teacher.first"),
+						setProperties().getProperty("remove.teacher.title"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		} else if (setProperties().getProperty("teacher.emailTo").equals(tmp)) {
 			try {
 				t.emailTo();
 			} catch (NullPointerException | IndexOutOfBoundsException n) {
-				JOptionPane.showMessageDialog(null, "Najpierw wybierz wykładowcę!", "Wysyłanie e-maila", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, setProperties().getProperty("select.teacher.first"),
+						setProperties().getProperty("email.title"), JOptionPane.INFORMATION_MESSAGE);
 			} catch (IOException | URISyntaxException ex) {
 				ex.printStackTrace();
 			}
@@ -89,7 +77,8 @@ public class AppLogic {
 			try {
 				em.delete(session);
 			} catch (NullPointerException | IndexOutOfBoundsException ee) {
-				JOptionPane.showMessageDialog(null, "Najpierw wybierz zaliczenie!", "Usuwanie zaliczenia", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, setProperties().getProperty("select.classes.first"),
+						setProperties().getProperty("remove.classes.title"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		} else if (setProperties().getProperty("schedule.today").equals(tmp)) {
 			c.showToday(session);
@@ -103,10 +92,9 @@ public class AppLogic {
 			try {
 				c.delete(session);
 			} catch (IndexOutOfBoundsException | NullPointerException ex) {
-				JOptionPane.showMessageDialog(null, "Najpierw wybierz zajęcia w widoku tygodniowym!", "Usuwanie zajęć", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, setProperties().getProperty("select.weekly.first"),
+						setProperties().getProperty("remove.classes.title"), JOptionPane.INFORMATION_MESSAGE);
 			}
-
-
 		} else if (setProperties().getProperty("note.create").equals(tmp)) {
 			notes.clearNoteArea();
 		} else if (setProperties().getProperty("note.open").equals(tmp)) {
@@ -131,6 +119,4 @@ public class AppLogic {
 			throw new IllegalStateException("Unexpected value: " + tmp);
 		}
 	}
-
-
 }

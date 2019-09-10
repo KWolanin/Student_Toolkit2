@@ -33,7 +33,7 @@ public class LangFrame extends JFrame {
 		contentPane.add(langCombo);
 		contentPane.add(save);
 		save.addActionListener(e -> {
-					MainFrame.PLlang = Objects.equals(langCombo.getSelectedItem(), "Polski");
+					MainFrame.isPolishSet = Objects.equals(langCombo.getSelectedItem(), "Polski");
 					try {
 						new MainFrame();
 						dispose();

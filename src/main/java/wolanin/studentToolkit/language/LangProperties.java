@@ -12,7 +12,7 @@ public class LangProperties {
 		File polLang = new File("src\\main\\resources\\polishLang.properties");
 		File engLang = new File("src\\main\\resources\\englishLang.properties");
 		BufferedReader in;
-		if (MainFrame.PLlang) {
+		if (MainFrame.isPolishSet) {
 			in = new BufferedReader(
 					new InputStreamReader(
 							new FileInputStream(polLang), StandardCharsets.UTF_8));
@@ -26,4 +26,5 @@ public class LangProperties {
 		properties.load(in);
 		return properties;
 	}
+
 }

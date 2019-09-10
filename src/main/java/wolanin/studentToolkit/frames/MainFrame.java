@@ -48,11 +48,16 @@ public class MainFrame extends JFrame {
 	public static final JTable classesTable = new JTable();
 	public static final JTable examTable = new JTable();
 
-	public static final Notes notes = new Notes();
-	public static boolean PLlang = true;
-
+	public static Notes notes;
+	static {
+		try {
+			notes = new Notes();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public static boolean isPolishSet = true;
 	public static Session session;
-
 	public MainFrame() throws IOException {
 		try {
 			initComponents();
@@ -111,7 +116,13 @@ public class MainFrame extends JFrame {
 		menuBar.add(helpMenu);
 		fileMenu.add(exit);
 		helpMenu.add(about);
-		about.addActionListener(e -> new AboutFrame().setVisible(true));
+		about.addActionListener(e -> {
+			try {
+				new AboutFrame().setVisible(true);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		});
 		exit.addActionListener(e -> System.exit(0));
 		FrameLayout.setGroupLayout(contentPane);
 		tabs.addTab(setProperties().getProperty("tab.grade"), null, grades, setProperties().getProperty("tab.tip.grade"));

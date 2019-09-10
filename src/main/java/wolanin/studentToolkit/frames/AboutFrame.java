@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static java.awt.Desktop.getDesktop;
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 class AboutFrame extends JDialog {
 
@@ -20,12 +21,12 @@ class AboutFrame extends JDialog {
 	private final JLabel toolsLabel = new JLabel(usedTechAndTools, SwingUtilities.CENTER);
 	private final JLabel emailto = new JLabel(sendEmail, SwingUtilities.CENTER);
 
-	AboutFrame() {
+	AboutFrame() throws IOException {
 		initComponents();
 	}
 
-	private void initComponents() {
-		setTitle("O programie");
+	private void initComponents() throws IOException {
+		setTitle(setProperties().getProperty("about.title"));
 		setLocationRelativeTo(getOwner());
 		setSize(300, 200);
 		Container contentPane = getContentPane();

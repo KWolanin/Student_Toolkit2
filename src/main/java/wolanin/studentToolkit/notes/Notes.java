@@ -7,13 +7,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
 
+import static wolanin.studentToolkit.language.LangProperties.setProperties;
+
 public class Notes {
 
 	private JFileChooser fileChooser;
-	private final FileNameExtensionFilter filter = new FileNameExtensionFilter("Pliki tekstowe (*.txt)", "*.txt");
-	private final FileNameExtensionFilter openFilter = new FileNameExtensionFilter("Pliki tekstowe (*.txt)", "txt");
+	private final FileNameExtensionFilter filter = new FileNameExtensionFilter(setProperties().getProperty("saving.desc"), "*.txt");
+	private final FileNameExtensionFilter openFilter = new FileNameExtensionFilter(setProperties().getProperty("saving.desc"), "txt");
 
-	public Notes() {
+	public Notes() throws IOException {
 	}
 
 	public void clearNoteArea() {
@@ -29,7 +31,9 @@ public class Notes {
 	public void saveFile() throws IOException {
 		File fileToSave;
 		fileChooser = new JFileChooser();
-		setPolishFileChooser(fileChooser);
+		if (MainFrame.isPolishSet) {
+			setPolishFileChooser(fileChooser);
+		}
 		fileChooser.addChoosableFileFilter(filter);
 		fileChooser.setFileFilter(filter);
 		fileChooser.setDialogTitle("Zapisz plik");
@@ -50,7 +54,9 @@ public class Notes {
 		String line;
 		BufferedReader in;
 		fileChooser = new JFileChooser();
-		setPolishFileChooser(fileChooser);
+		if (MainFrame.isPolishSet) {
+			setPolishFileChooser(fileChooser);
+		}
 		fileChooser.setCurrentDirectory(new File("UserNotes"));
 		fileChooser.setFileFilter(openFilter);
 		fileChooser.setMultiSelectionEnabled(false);
