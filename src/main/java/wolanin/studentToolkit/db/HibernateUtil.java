@@ -1,4 +1,4 @@
-package wolanin.studentToolkit.dbHibernate;
+package wolanin.studentToolkit.db;
 
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;

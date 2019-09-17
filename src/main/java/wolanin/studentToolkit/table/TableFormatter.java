@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class TableFormat {
+public class TableFormatter {
 
 	public static DefaultTableModel tableModel;
 

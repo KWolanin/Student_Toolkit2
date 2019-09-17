@@ -1,10 +1,10 @@
-package wolanin.studentToolkit.dbHibernate;
+package wolanin.studentToolkit.db;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import wolanin.studentToolkit.frames.ExamFrame;
 import wolanin.studentToolkit.frames.MainFrame;
-import wolanin.studentToolkit.table.TableFormat;
+import wolanin.studentToolkit.table.TableFormatter;
 
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import java.util.List;
 import static wolanin.studentToolkit.frames.ExamFrame.*;
 import static wolanin.studentToolkit.frames.MainFrame.*;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
-import static wolanin.studentToolkit.table.TableFormat.tableModel;
+import static wolanin.studentToolkit.table.TableFormatter.tableModel;
 
 public class ExamsDAO implements HibernateDBFlow {
 
@@ -37,7 +37,7 @@ public class ExamsDAO implements HibernateDBFlow {
 
 	@Override
 	public void showAll(Session session) {
-		TableFormat.setTableModelProp(columnNames);
+		TableFormatter.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Exams> exams = (List<Exams>) session.createQuery("from Exams").list();
 		for (Exams value : exams) {
@@ -49,7 +49,7 @@ public class ExamsDAO implements HibernateDBFlow {
 			String[] data = {name, type, date, hour, String.valueOf(room)};
 			tableModel.addRow(data);
 		}
-		TableFormat.setTableProp(examPanel, examTable, tableModel);
+		TableFormatter.setTableProp(examPanel, examTable, tableModel);
 	}
 
 	@Override

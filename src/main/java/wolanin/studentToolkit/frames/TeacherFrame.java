@@ -2,7 +2,7 @@ package wolanin.studentToolkit.frames;
 
 import javax.swing.*;
 
-import wolanin.studentToolkit.dbHibernate.TeacherDAO;
+import wolanin.studentToolkit.db.TeacherDAO;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class TeacherFrame extends JDialog {
 
 	public TeacherFrame() throws IOException {
 		JPanel panel = new JPanel();
-		JButton save = FormatFrame.createDialog(this, panel, setProperties().getProperty("add.title.teachers"), 4);
+		JButton save = ComponentCreator.createDialog(this, panel, setProperties().getProperty("add.title.teachers"), 4);
 		save.addActionListener(e -> {
 			try {
 				TeacherDAO.saveToBase(MainFrame.session);

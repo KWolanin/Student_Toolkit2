@@ -1,7 +1,7 @@
 package wolanin.studentToolkit.frames;
 
 import org.hibernate.Session;
-import wolanin.studentToolkit.dbHibernate.*;
+import wolanin.studentToolkit.db.*;
 import wolanin.studentToolkit.notes.*;
 
 import javax.swing.*;
@@ -11,7 +11,9 @@ import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.Objects;
 
-import static wolanin.studentToolkit.AppLogic.createFileDir;
+import static wolanin.studentToolkit.NoteLogic.createFileDir;
+import static wolanin.studentToolkit.frames.ComponentCreator.createToolbarButton;
+import static wolanin.studentToolkit.frames.ComponentCreator.setToolbarSettings;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 
@@ -22,33 +24,37 @@ public class MainFrame extends JFrame {
 	private final JLabel labelClasses = new JLabel();
 	private final JLabel exams = new JLabel();
 	private final JLabel ownNotes = new JLabel();
-	private static final String currentDate = "";
-	private static final JLabel classesLabel = new JLabel(currentDate, SwingConstants.CENTER);
+	private final JLabel books = new JLabel();
 	private static final JMenuBar menuBar = new JMenuBar();
 	private final JMenu fileMenu = new JMenu(setProperties().getProperty("menu.file"));
 	private final JMenu helpMenu = new JMenu(setProperties().getProperty("menu.help"));
 	private final JMenuItem exit = new JMenuItem(setProperties().getProperty("menu.exit"));
 	private final JMenuItem about = new JMenuItem(setProperties().getProperty("menu.about"));
-	private final JToolBar gradesToolbar = new JToolBar();
-	private final JToolBar teachersToolbar = new JToolBar();
-	private final JToolBar examsToolbar = new JToolBar();
-	private final JToolBar classesToolbar = new JToolBar();
-	private final JToolBar notesToolbar = new JToolBar();
+	private final JToolBar gradesToolbar = new JToolBar("gradesToolbar");
+	private final JToolBar teachersToolbar = new JToolBar("teachersToolbar");
+	private final JToolBar examsToolbar = new JToolBar("examsToolbar");
+	private final JToolBar classesToolbar = new JToolBar("classesToolbar");
+	private final JToolBar notesToolbar = new JToolBar("notesToolbar");
+	private final JToolBar booksToolbar = new JToolBar("booksToolbar");
 	public static final JTextArea noteArea = new JTextArea();
 	static final JPanel tabPanel = new JPanel();
 	public static final JPanel gradesPanel = new JPanel();
 	public static final JPanel examPanel = new JPanel();
 	public static final JPanel teachersPanel = new JPanel();
 	public static final JPanel classesPanel = new JPanel();
+	public static final JPanel booksPanel = new JPanel();
 	private final JScrollPane gradeScroll = new JScrollPane(gradesPanel);
 	private final JScrollPane examScroll = new JScrollPane(examPanel);
 	private final JScrollPane teacherScroll = new JScrollPane(teachersPanel);
+	private final JScrollPane booksScroll = new JScrollPane(booksPanel);
 	public static final JTable gradesTable = new JTable();
 	public static final JTable teacherTable = new JTable();
 	public static final JTable classesTable = new JTable();
 	public static final JTable examTable = new JTable();
+	public static final JTable bookTable = new JTable();
 
 	public static Notes notes;
+
 	static {
 		try {
 			notes = new Notes();
@@ -56,8 +62,10 @@ public class MainFrame extends JFrame {
 			e.printStackTrace();
 		}
 	}
+
 	public static boolean isPolishSet = true;
 	public static Session session;
+
 	public MainFrame() throws IOException {
 		try {
 			initComponents();
@@ -87,6 +95,13 @@ public class MainFrame extends JFrame {
 				} catch (IOException exc) {
 					exc.printStackTrace();
 				}
+				BooksDAO b = null;
+				try {
+					b = new BooksDAO();
+				} catch (IOException exc) {
+					exc.printStackTrace();
+				}
+				Objects.requireNonNull(b).showAll(session);
 				Objects.requireNonNull(g).showAll(session);
 				Objects.requireNonNull(t).showAll(session);
 				ex.showAll(session);
@@ -101,7 +116,7 @@ public class MainFrame extends JFrame {
 			}
 		});
 		createFileDir();
-		FormatFrame.setFrameCenter(this);
+		ComponentCreator.setFrameCenter(this);
 		setVisible(true);
 		setResizable(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -123,64 +138,75 @@ public class MainFrame extends JFrame {
 				ex.printStackTrace();
 			}
 		});
-		exit.addActionListener(e -> System.exit(0));
-		FrameLayout.setGroupLayout(contentPane);
+		exit.addActionListener(e -> {
+			HibernateUtil.closeSession();
+			System.exit(0);
+		});
+		LayoutSetter.setGroupLayout(contentPane);
 		tabs.addTab(setProperties().getProperty("tab.grade"), null, grades, setProperties().getProperty("tab.tip.grade"));
 		tabs.addTab(setProperties().getProperty("tab.lecturer"), null, teachers, setProperties().getProperty("tab.tip.lecturer"));
 		tabs.addTab(setProperties().getProperty("tab.exam"), null, exams, setProperties().getProperty("tab.tip.exam"));
 		tabs.addTab(setProperties().getProperty("tab.schedule"), null, labelClasses, setProperties().getProperty("tab.tip.schedule"));
 		tabs.addTab(setProperties().getProperty("tab.note"), null, ownNotes, setProperties().getProperty("tab.tip.note"));
+		tabs.addTab(setProperties().getProperty("tab.book"), null, books, setProperties().getProperty("tab.tip.book"));
 
 		grades.setLayout(new BorderLayout());
-		FormatFrame.setToolbarSettings(gradesToolbar);
+		setToolbarSettings(gradesToolbar);
 		grades.add(gradesToolbar, BorderLayout.LINE_START);
-		FormatFrame.createToolbarButton(setProperties().getProperty("grade.fulllist"), gradesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("grade.average"), gradesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("grade.add"), gradesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("grade.delete"), gradesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("grade.showUnpassed"), gradesToolbar);
-
+		createToolbarButton("grade.fulllist", gradesToolbar);
+		createToolbarButton("grade.average", gradesToolbar);
+		createToolbarButton("grade.add", gradesToolbar);
+		createToolbarButton("grade.delete", gradesToolbar);
+		createToolbarButton("grade.showUnpassed", gradesToolbar);
 		grades.add(gradeScroll, BorderLayout.CENTER);
 		gradesPanel.setLayout(new BorderLayout());
 
 		teachers.setLayout(new BorderLayout());
-		FormatFrame.setToolbarSettings(teachersToolbar);
+		setToolbarSettings(teachersToolbar);
 		teachers.add(teachersToolbar, BorderLayout.LINE_START);
-		FormatFrame.createToolbarButton(setProperties().getProperty("teacher.add"), teachersToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("teacher.delete"), teachersToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("teacher.emailTo"), teachersToolbar);
+
+		createToolbarButton("teacher.add", teachersToolbar);
+		createToolbarButton("teacher.delete", teachersToolbar);
+		createToolbarButton("teacher.emailTo", teachersToolbar);
 		teachers.add(teacherScroll, BorderLayout.CENTER);
 		teachersPanel.setLayout(new BorderLayout());
+
+		books.setLayout(new BorderLayout());
+		setToolbarSettings(booksToolbar);
+		books.add(booksToolbar, BorderLayout.LINE_START);
+		createToolbarButton("book.add", booksToolbar);
+		createToolbarButton("book.delete", booksToolbar);
+		books.add(booksScroll, BorderLayout.CENTER);
+		booksPanel.setLayout(new BorderLayout());
 
 		examPanel.setLayout(new BorderLayout());
 		exams.setLayout(new BorderLayout());
 		exams.add(examScroll, BorderLayout.CENTER);
-		FormatFrame.setToolbarSettings(examsToolbar);
+		setToolbarSettings(examsToolbar);
 		exams.add(examsToolbar, BorderLayout.LINE_START);
-		FormatFrame.createToolbarButton(setProperties().getProperty("exam.add"), examsToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("exam.delete"), examsToolbar);
+		createToolbarButton("exam.add", examsToolbar);
+		createToolbarButton("exam.delete", examsToolbar);
+
 
 		labelClasses.setLayout(new BorderLayout());
-		FormatFrame.setToolbarSettings(classesToolbar);
+		setToolbarSettings(classesToolbar);
 		labelClasses.add(classesToolbar, BorderLayout.LINE_START);
-		labelClasses.add(classesLabel, BorderLayout.NORTH);
-		classesLabel.setOpaque(true);
 		labelClasses.add(classesPanel, BorderLayout.CENTER);
 		classesPanel.setLayout(new BorderLayout());
 		classesPanel.add(classesTable, BorderLayout.CENTER);
-		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.today"), classesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.tommorow"), classesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.week"), classesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.add"), classesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("schedule.delete"), classesToolbar);
+		createToolbarButton("schedule.today", classesToolbar);
+		createToolbarButton("schedule.tommorow", classesToolbar);
+		createToolbarButton("schedule.week", classesToolbar);
+		createToolbarButton("schedule.add", classesToolbar);
+		createToolbarButton("schedule.delete", classesToolbar);
 
 		ownNotes.setLayout(new BorderLayout());
-		FormatFrame.setToolbarSettings(notesToolbar);
+		setToolbarSettings(notesToolbar);
 		ownNotes.add(notesToolbar, BorderLayout.LINE_START);
-		FormatFrame.createToolbarButton(setProperties().getProperty("note.create"), notesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("note.open"), notesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("note.save"), notesToolbar);
-		FormatFrame.createToolbarButton(setProperties().getProperty("note.openFolder"), notesToolbar);
+		createToolbarButton("note.create", notesToolbar);
+		createToolbarButton("note.open", notesToolbar);
+		createToolbarButton("note.save", notesToolbar);
+		createToolbarButton("note.openFolder", notesToolbar);
 		ownNotes.add(noteArea, BorderLayout.CENTER);
 		JScrollPane scrollPane = new JScrollPane(noteArea);
 		scrollPane.setHorizontalScrollBar(null);

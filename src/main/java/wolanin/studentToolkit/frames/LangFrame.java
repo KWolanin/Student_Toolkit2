@@ -5,7 +5,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
-import static wolanin.studentToolkit.frames.FormatFrame.setFrameCenter;
+import static wolanin.studentToolkit.frames.ComponentCreator.setFrameCenter;
 
 
 public class LangFrame extends JFrame {

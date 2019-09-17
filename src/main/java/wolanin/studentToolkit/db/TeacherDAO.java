@@ -1,9 +1,9 @@
-package wolanin.studentToolkit.dbHibernate;
+package wolanin.studentToolkit.db;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import wolanin.studentToolkit.frames.MainFrame;
-import wolanin.studentToolkit.table.TableFormat;
+import wolanin.studentToolkit.table.TableFormatter;
 import wolanin.studentToolkit.frames.TeacherFrame;
 
 import javax.swing.*;
@@ -17,13 +17,13 @@ import java.util.Objects;
 import static java.awt.Desktop.getDesktop;
 import static wolanin.studentToolkit.frames.MainFrame.*;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
-import static wolanin.studentToolkit.table.TableFormat.setTableModelProp;
-import static wolanin.studentToolkit.table.TableFormat.tableModel;
+import static wolanin.studentToolkit.table.TableFormatter.setTableModelProp;
+import static wolanin.studentToolkit.table.TableFormatter.tableModel;
 import static wolanin.studentToolkit.frames.TeacherFrame.*;
 
 public class TeacherDAO implements HibernateDBFlow {
 
-	private String[] columnNames = new String[]{
+	private final String[] columnNames = new String[]{
 			setProperties().getProperty("table.firstName"),
 			setProperties().getProperty("table.lastName"),
 			setProperties().getProperty("table.email"),
@@ -45,7 +45,7 @@ public class TeacherDAO implements HibernateDBFlow {
 			String[] data = {firstName, lastName, email, title};
 			tableModel.addRow(data);
 		}
-		TableFormat.setTableProp(teachersPanel, teacherTable, tableModel);
+		TableFormatter.setTableProp(teachersPanel, teacherTable, tableModel);
 	}
 
 	@Override

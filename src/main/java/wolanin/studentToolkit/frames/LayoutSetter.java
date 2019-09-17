@@ -6,7 +6,7 @@ import java.awt.*;
 import static wolanin.studentToolkit.frames.MainFrame.tabPanel;
 import static wolanin.studentToolkit.frames.MainFrame.tabs;
 
-class FrameLayout {
+class LayoutSetter {
 
 	static void setGroupLayout(Container contentPane) {
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);

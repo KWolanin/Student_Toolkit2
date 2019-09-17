@@ -1,10 +1,10 @@
-package wolanin.studentToolkit.dbHibernate;
+package wolanin.studentToolkit.db;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import wolanin.studentToolkit.frames.MainFrame;
 import wolanin.studentToolkit.frames.ClassesFrame;
-import wolanin.studentToolkit.table.TableFormat;
+import wolanin.studentToolkit.table.TableFormatter;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -16,16 +16,17 @@ import java.util.Objects;
 import static wolanin.studentToolkit.frames.MainFrame.*;
 import static wolanin.studentToolkit.frames.ClassesFrame.*;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
-import static wolanin.studentToolkit.table.TableFormat.*;
+import static wolanin.studentToolkit.table.TableFormatter.*;
 
 public class ClassesDAO implements HibernateDBFlow {
 
-	private String[] columnNames = new String[]
+	private final String[] columnNames = new String[]
 			{setProperties().getProperty("table.classesName"),
 					setProperties().getProperty("table.startHour"),
 					setProperties().getProperty("table.endHour"),
 					setProperties().getProperty("table.room"),
 					setProperties().getProperty("table.day")};
+
 	public ClassesDAO() throws IOException {
 	}
 
@@ -43,13 +44,13 @@ public class ClassesDAO implements HibernateDBFlow {
 			String[] data = {name, startHour, endHour, String.valueOf(room), dayOfWeek};
 			tableModel.addRow(data);
 		}
-		TableFormat.setTableProp(classesPanel, classesTable, tableModel);
+		TableFormatter.setTableProp(classesPanel, classesTable, tableModel);
 	}
 
 	public void showToday(Session session) {
 		String today = getNameOfDay(getTodayDateToString());
 		String sql = "from Classes where dayofweek='" + today + "'";
-		TableFormat.setTableModelProp(columnNames);
+		TableFormatter.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Classes> classes = (List<Classes>) session.createQuery(sql).list();
 		for (Classes value : classes) {
@@ -61,7 +62,7 @@ public class ClassesDAO implements HibernateDBFlow {
 			String[] data = {name, startHour, endHour, String.valueOf(room), dayOfWeek};
 			tableModel.addRow(data);
 		}
-		TableFormat.setTableProp(classesPanel, classesTable, tableModel);
+		TableFormatter.setTableProp(classesPanel, classesTable, tableModel);
 
 
 	}
@@ -75,7 +76,7 @@ public class ClassesDAO implements HibernateDBFlow {
 		}
 		String tommorowName = getNameOfDay(x);
 		String sqle = "from Classes where dayofweek='" + tommorowName + "'";
-		TableFormat.setTableModelProp(columnNames);
+		TableFormatter.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Classes> classes = (List<Classes>) session.createQuery(sqle).list();
 		for (Classes value : classes) {
@@ -87,7 +88,7 @@ public class ClassesDAO implements HibernateDBFlow {
 			String[] data = {name, startHour, endHour, String.valueOf(room), dayOfWeek};
 			tableModel.addRow(data);
 		}
-		TableFormat.setTableProp(classesPanel, classesTable, tableModel);
+		TableFormatter.setTableProp(classesPanel, classesTable, tableModel);
 	}
 
 	@Override

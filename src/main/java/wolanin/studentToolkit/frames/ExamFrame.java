@@ -2,7 +2,7 @@ package wolanin.studentToolkit.frames;
 
 import com.github.lgooddatepicker.components.TimePicker;
 import org.jdatepicker.JDatePicker;
-import wolanin.studentToolkit.dbHibernate.ExamsDAO;
+import wolanin.studentToolkit.db.ExamsDAO;
 
 
 import javax.swing.*;
@@ -41,7 +41,7 @@ public class ExamFrame extends JDialog {
 
 	public ExamFrame() throws IOException {
 		JPanel panel = new JPanel();
-		JButton save = FormatFrame.createDialog(this, panel, setProperties().getProperty("add.title.exams"), 5);
+		JButton save = ComponentCreator.createDialog(this, panel, setProperties().getProperty("add.title.exams"), 5);
 		JLabel name = new JLabel(setProperties().getProperty("table.classesName"));
 		panel.add(name);
 		panel.add(nameField);

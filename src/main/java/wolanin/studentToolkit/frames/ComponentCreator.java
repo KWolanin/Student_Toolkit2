@@ -1,19 +1,27 @@
 package wolanin.studentToolkit.frames;
 
-import wolanin.studentToolkit.AppLogic;
+import wolanin.studentToolkit.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
-class FormatFrame {
+class ComponentCreator {
 
 	private static final Insets buttonInsets = new Insets(10, 10, 10, 10);
 	private static final Dimension buttonDims = new Dimension(140, 30);
 	private static final Insets insetsToolbar = new Insets(15, 5, 5, 5);
+
+	private static final GradeLogic gradeLogic = new GradeLogic();
+	private static final ExamLogic examLogic = new ExamLogic();
+	private static final TeacherLogic teacherLogic = new TeacherLogic();
+	private static final ClassLogic classLogic = new ClassLogic();
+	private static final NoteLogic noteLogic = new NoteLogic();
+	private static final BookLogic bookLogic = new BookLogic();
 
 
 	static JButton createDialog(JDialog dialog, JPanel panel, String title, int row) throws IOException {
@@ -44,20 +52,18 @@ class FormatFrame {
 
 	static void createToolbarButton(String title, JToolBar toolbarName) {
 		JButton button = new JButton();
-		button.setText(title);
+		try {
+			button.setText(setProperties().getProperty(title));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		button.setMargin(buttonInsets);
 		int iconTextGapButton = 15;
 		button.setIconTextGap(iconTextGapButton);
 		button.setMinimumSize(buttonDims);
 		button.setMaximumSize(buttonDims);
 		toolbarName.add(button);
-		button.addActionListener(e -> {
-			try {
-				AppLogic.listenerChooser(e);
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		});
+		button.addActionListener(e -> addActionListener(toolbarName, e));
 	}
 
 	static void setToolbarSettings(JToolBar toolBar) {
@@ -67,6 +73,54 @@ class FormatFrame {
 		toolBar.setBorder(null);
 		toolBar.applyComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		toolBar.setMargin(insetsToolbar);
+	}
+
+	private static void addActionListener(JToolBar toolbarName, ActionEvent e){
+		String actionCommand = e.getActionCommand();
+		switch (toolbarName.getName()) {
+			case "gradesToolbar":
+				try {
+					gradeLogic.doAction(actionCommand);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "examsToolbar":
+				try {
+					examLogic.doAction(actionCommand);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "teachersToolbar":
+				try {
+					teacherLogic.doAction(actionCommand);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "classesToolbar":
+				try {
+					classLogic.doAction(actionCommand);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "notesToolbar":
+				try {
+					noteLogic.doAction(actionCommand);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				break;
+			case "booksToolbar":
+				try {
+					bookLogic.doAction(actionCommand);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				break;
+		}
 	}
 }
 

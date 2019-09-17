@@ -1,4 +1,4 @@
-package wolanin.studentToolkit.dbHibernate;
+package wolanin.studentToolkit.db;
 
 import javax.persistence.*;
 
@@ -62,7 +62,7 @@ class Grades {
 		return examKind;
 	}
 
-	public void setExamKind(String examKind) {
+	void setExamKind(String examKind) {
 		this.examKind = examKind;
 	}
 }

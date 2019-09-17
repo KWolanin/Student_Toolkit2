@@ -1,10 +1,10 @@
-package wolanin.studentToolkit.dbHibernate;
+package wolanin.studentToolkit.db;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import wolanin.studentToolkit.frames.GradeFrame;
-import wolanin.studentToolkit.table.TableFormat;
+import wolanin.studentToolkit.table.TableFormatter;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Objects;
 import static wolanin.studentToolkit.frames.MainFrame.*;
 import static wolanin.studentToolkit.frames.GradeFrame.*;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
-import static wolanin.studentToolkit.table.TableFormat.tableModel;
+import static wolanin.studentToolkit.table.TableFormatter.tableModel;
 
 public class GradesDAO implements HibernateDBFlow {
 	private final String[] columnNames = new String[]{setProperties().getProperty("table.classesName"),
@@ -30,7 +30,7 @@ public class GradesDAO implements HibernateDBFlow {
 
 	@Override
 	public void showAll(Session session) {
-		TableFormat.setTableModelProp(columnNames);
+		TableFormatter.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Grades> grades = (List<Grades>) session.createQuery("from Grades").list();
 		for (Grades value : grades) {
@@ -42,7 +42,7 @@ public class GradesDAO implements HibernateDBFlow {
 			String[] data = {name, String.valueOf(grade), type, String.valueOf(ects), examKind};
 			tableModel.addRow(data);
 		}
-		TableFormat.setTableProp(gradesPanel, gradesTable, tableModel);
+		TableFormatter.setTableProp(gradesPanel, gradesTable, tableModel);
 		gradesTable.updateUI();
 
 	}
@@ -96,9 +96,9 @@ public class GradesDAO implements HibernateDBFlow {
 	}
 
 	public void showFailed(Session session) {
-		TableFormat.setTableModelProp(columnNames);
+		TableFormatter.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
-		List<Grades> grades = (List<Grades>) session.createQuery("from Grades where grade<3 and type !='zaliczenie bez oceny'").list();
+		List<Grades> grades = (List<Grades>) session.createQuery("from Grades where grade<3 and examKind !='zaliczenie bez oceny'").list();
 		for (Grades value : grades) {
 			String name = value.getName();
 			float grade = value.getGrade();
@@ -108,7 +108,12 @@ public class GradesDAO implements HibernateDBFlow {
 			String[] data = {name, String.valueOf(grade), type, String.valueOf(ects), examKind};
 			tableModel.addRow(data);
 		}
-		TableFormat.setTableProp(gradesPanel, gradesTable, tableModel);
+		TableFormatter.setTableProp(gradesPanel, gradesTable, tableModel);
+		//todo
+		if (grades.isEmpty()){
+			JOptionPane.showMessageDialog(null, "Gratulacje, wszystko zaliczone!");
+		}
+
 	}
 
 	public void calcAverageByHibernate(Session session) throws IOException {
