@@ -71,11 +71,11 @@ public class ExamFrame extends JDialog {
 		DateFormat defaultPickerFormat = new SimpleDateFormat("dd MMM yyyy",
 				new Locale(setProperties().getProperty("locale")));
 		DateFormat standardDataFormat = new SimpleDateFormat("dd.MM.yyyy");
-		Date standardDate = null;
+		Date standardDate;
 		try {
 			standardDate = defaultPickerFormat.parse(date);
-		} catch (ParseException e) {
-			e.printStackTrace();
+		} catch (ParseException | NullPointerException e) {
+			return "";
 		}
 		return standardDataFormat.format(standardDate);
 	}

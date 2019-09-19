@@ -47,7 +47,7 @@ public class ClassesDAO implements HibernateDBFlow {
 		TableFormatter.setTableProp(classesPanel, classesTable, tableModel);
 	}
 
-	public void showToday(Session session) {
+	protected void showToday(Session session) {
 		String today = getNameOfDay(getTodayDateToString());
 		String sql = "from Classes where dayofweek='" + today + "'";
 		TableFormatter.setTableModelProp(columnNames);
@@ -67,7 +67,7 @@ public class ClassesDAO implements HibernateDBFlow {
 
 	}
 
-	public void showTommorow(Session session) {
+	protected void showTommorow(Session session) {
 		String x = null;
 		try {
 			x = addOneDay(getTodayDateToString());
@@ -117,7 +117,7 @@ public class ClassesDAO implements HibernateDBFlow {
 		String startHour = startHourPicker.getText();
 		String endHour = endHourPicker.getText();
 		int room = Integer.parseInt(ClassesFrame.roomField.getText());
-		if (classesName.equals("") | room == 0) {
+		if (classesName.equals("") | room == 0 | dayofWeek.equals("") | startHour.equals("") | endHour.equals("")) {
 			JOptionPane.showMessageDialog(null, setProperties().getProperty("badInputMsg"),
 					setProperties().getProperty("add.title.classes"), JOptionPane.INFORMATION_MESSAGE);
 		} else {

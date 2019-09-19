@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.Objects;
 
+import static wolanin.studentToolkit.frames.ComponentCreator.createDialog;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 public class GradeFrame extends JDialog {
@@ -42,7 +43,7 @@ public class GradeFrame extends JDialog {
 
 	public GradeFrame() throws IOException {
 		JPanel panel = new JPanel();
-		JButton save = ComponentCreator.createDialog(this, panel, setProperties().getProperty("add.title"), 5);
+		JButton save = createDialog(this, panel, setProperties().getProperty("add.title"), 5);
 		JLabel name = new JLabel(setProperties().getProperty("add.grade.name"));
 		panel.add(name);
 		panel.add(nameField);

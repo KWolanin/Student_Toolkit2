@@ -16,12 +16,38 @@ class ComponentCreator {
 	private static final Dimension buttonDims = new Dimension(140, 30);
 	private static final Insets insetsToolbar = new Insets(15, 5, 5, 5);
 
-	private static final GradeLogic gradeLogic = new GradeLogic();
+	private static GradeLogic gradeLogic;
+
+	static {
+		try {
+			gradeLogic = new GradeLogic();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static final ExamLogic examLogic = new ExamLogic();
 	private static final TeacherLogic teacherLogic = new TeacherLogic();
-	private static final ClassLogic classLogic = new ClassLogic();
+	private static ClassLogic classLogic;
+
+	static {
+		try {
+			classLogic = new ClassLogic();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static final NoteLogic noteLogic = new NoteLogic();
-	private static final BookLogic bookLogic = new BookLogic();
+	private static BookLogic bookLogic;
+
+	static {
+		try {
+			bookLogic = new BookLogic();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	static JButton createDialog(JDialog dialog, JPanel panel, String title, int row) throws IOException {

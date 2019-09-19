@@ -59,6 +59,7 @@ public class ClassesFrame extends JDialog {
 				ex.printStackTrace();
 			}
 			dispose();
+
 		});
 	}
 }

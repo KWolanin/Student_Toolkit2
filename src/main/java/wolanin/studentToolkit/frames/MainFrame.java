@@ -101,7 +101,11 @@ public class MainFrame extends JFrame {
 				} catch (IOException exc) {
 					exc.printStackTrace();
 				}
-				Objects.requireNonNull(b).showAll(session);
+				try {
+					Objects.requireNonNull(b).showAll(session);
+				} catch (IOException exc) {
+					exc.printStackTrace();
+				}
 				Objects.requireNonNull(g).showAll(session);
 				Objects.requireNonNull(t).showAll(session);
 				ex.showAll(session);

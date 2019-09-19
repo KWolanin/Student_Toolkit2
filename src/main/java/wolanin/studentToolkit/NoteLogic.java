@@ -8,6 +8,9 @@ import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 public class NoteLogic implements ChooseAction {
 
+	public NoteLogic() {
+	}
+
 	@Override
 	public void doAction(String actionCommand) throws IOException {
 		if (setProperties().getProperty("note.create").equals(actionCommand)) {
@@ -33,6 +36,7 @@ public class NoteLogic implements ChooseAction {
 		}
 	}
 
+	@SuppressWarnings("Result of method call ignored")
 	public static void createFileDir() {
 		File dir = new File("UserNotes");
 		if (!dir.exists()) {

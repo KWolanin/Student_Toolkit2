@@ -8,25 +8,25 @@ import java.io.IOException;
 import static wolanin.studentToolkit.frames.MainFrame.session;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
-public class ClassLogic implements ChooseAction {
+public class ClassLogic extends ClassesDAO implements ChooseAction {
 
-	public ClassLogic() {
+	public ClassLogic() throws IOException {
+		super();
 	}
 
 	@Override
 	public void doAction(String actionCommand) throws IOException {
-		ClassesDAO classesDAO = new ClassesDAO();
 		if (setProperties().getProperty("schedule.today").equals(actionCommand)) {
-			classesDAO.showToday(session);
+			showToday(session);
 		} else if (setProperties().getProperty("schedule.tommorow").equals(actionCommand)) {
-			classesDAO.showTommorow(session);
+			showTommorow(session);
 		} else if (setProperties().getProperty("schedule.week").equals(actionCommand)) {
-			classesDAO.showAll(session);
+			showAll(session);
 		} else if (setProperties().getProperty("schedule.add").equals(actionCommand)) {
-			classesDAO.add(session);
+			add(session);
 		} else if (setProperties().getProperty("schedule.delete").equals(actionCommand)) {
 			try {
-				classesDAO.delete(session);
+				delete(session);
 			} catch (IndexOutOfBoundsException | NullPointerException ex) {
 				JOptionPane.showMessageDialog(null, setProperties().getProperty("select.weekly.first"),
 						setProperties().getProperty("remove.classes.title"), JOptionPane.INFORMATION_MESSAGE);

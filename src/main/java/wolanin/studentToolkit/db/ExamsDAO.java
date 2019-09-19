@@ -21,6 +21,7 @@ public class ExamsDAO implements HibernateDBFlow {
 
 
 	private String[] columnNames;
+
 	{
 		try {
 			columnNames = new String[]{
@@ -71,11 +72,14 @@ public class ExamsDAO implements HibernateDBFlow {
 	}
 
 	public void addToBase(Session session) throws IOException {
+		String date, formattedDate;
 		String examName = ExamFrame.nameField.getText();
-		String type = (String) typeCombo.getSelectedItem();
-		String hour = timePicker.getText();
-		String date = ExamFrame.datePicker.getFormattedTextField().getText();
-		String formattedDate = changeDateFormat(date);
+		String type;
+		String hour;
+		type = (String) typeCombo.getSelectedItem();
+		date = ExamFrame.datePicker.getFormattedTextField().getText();
+		formattedDate = changeDateFormat(date);
+		hour = timePicker.getText();
 		int room = 0;
 		try {
 			room = Integer.parseInt(roomField.getText());

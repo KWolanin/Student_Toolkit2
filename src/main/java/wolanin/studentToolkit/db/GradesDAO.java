@@ -95,7 +95,7 @@ public class GradesDAO implements HibernateDBFlow {
 		showAll(session);
 	}
 
-	public void showFailed(Session session) {
+	protected void showFailed(Session session) {
 		TableFormatter.setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Grades> grades = (List<Grades>) session.createQuery("from Grades where grade<3 and examKind !='zaliczenie bez oceny'").list();
@@ -116,7 +116,7 @@ public class GradesDAO implements HibernateDBFlow {
 
 	}
 
-	public void calcAverageByHibernate(Session session) throws IOException {
+	protected void calcAverage(Session session) throws IOException {
 		float sum = 0.0f;
 		float wage = 0.0f;
 		@SuppressWarnings("unchecked")
