@@ -4,7 +4,6 @@ import org.jdatepicker.JDatePicker;
 import wolanin.studentToolkit.db.BooksDAO;
 
 import javax.swing.*;
-
 import java.io.IOException;
 import java.util.Objects;
 
@@ -14,7 +13,7 @@ import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 public class BooksFrame extends JDialog {
 
-	private final BooksDAO d = new BooksDAO();
+	private final BooksDAO b = new BooksDAO();
 	public static final JTextField titleField = new JTextField();
 	public static final JTextField authorField = new JTextField();
 	public static final JDatePicker borrowedPicker = new JDatePicker();
@@ -71,7 +70,7 @@ public class BooksFrame extends JDialog {
 		});
 		save.addActionListener(e -> {
 			try {
-				d.addToBase(session);
+				b.addToBase(session);
 
 			} catch (IOException ex) {
 				ex.printStackTrace();

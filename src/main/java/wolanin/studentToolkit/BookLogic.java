@@ -17,6 +17,8 @@ public class BookLogic extends BooksDAO implements ChooseAction {
 			add(session);
 		} else if (setProperties().getProperty("book.delete").equals(actionCommand)) {
 			delete(session);
+		} else if (setProperties().getProperty("book.checkPenalty").equals(actionCommand)) {
+			checkPenalty(session);
 		}
 	}
 }

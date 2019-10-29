@@ -7,17 +7,25 @@ import wolanin.studentToolkit.frames.MainFrame;
 import wolanin.studentToolkit.table.TableFormatter;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.showMessageDialog;
 import static wolanin.studentToolkit.frames.BooksFrame.*;
-import static wolanin.studentToolkit.frames.MainFrame.*;
+import static wolanin.studentToolkit.frames.ExamFrame.changeDateFormat;
+import static wolanin.studentToolkit.frames.MainFrame.bookTable;
+import static wolanin.studentToolkit.frames.MainFrame.booksPanel;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
 import static wolanin.studentToolkit.table.TableFormatter.setTableModelProp;
 import static wolanin.studentToolkit.table.TableFormatter.tableModel;
 
 public class BooksDAO implements HibernateDBFlow {
+
+	public static float penaltyValuePerDay = 0.2f;
 
 	private final String[] columnNames = new String[]
 			{setProperties().getProperty("book.title"),
@@ -34,22 +42,23 @@ public class BooksDAO implements HibernateDBFlow {
 
 	@Override
 	public void showAll(Session session) throws IOException {
-		String isPenalty;
 		setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Books> books = (List<Books>) session.createQuery("from Books").list();
 		for (Books value : books) {
 			String title = value.getTitle();
 			String author = value.getAuthor();
-			String borrowed = value.getBorrowed();
-			String returnTo = value.getReturnTo();
+			Date borrowed = value.getBorrowed();
+			Date returnTo = value.getReturnTo();
+			String isPenalty;
 			if (value.isPenalty()) {
 				isPenalty = setProperties().getProperty("yes");
 			} else {
 				isPenalty = setProperties().getProperty("no");
 			}
-			String penalty = String.valueOf(value.getPenalty());
-			String[] data = {title, author, borrowed, returnTo, isPenalty, penalty};
+			double penalty = value.getPenaltyValue();
+			String formattedPenalty = String.format("%.2f", penalty);
+			String[] data = {title, author, String.valueOf(borrowed), String.valueOf(returnTo), String.valueOf(isPenalty), formattedPenalty};
 			tableModel.addRow(data);
 		}
 		TableFormatter.setTableProp(booksPanel, bookTable, tableModel);
@@ -57,9 +66,16 @@ public class BooksDAO implements HibernateDBFlow {
 
 	@Override
 	public void delete(Session session) throws IOException {
-		int row = bookTable.getSelectedRow();
-		String selectedTitle = String.valueOf(bookTable.getValueAt(row, 0));
-		String selectedAuthor = String.valueOf(bookTable.getValueAt(row, 1));
+		int row;
+		String selectedTitle = "";
+		String selectedAuthor = "";
+		try {
+			row = bookTable.getSelectedRow();
+			selectedTitle = String.valueOf(bookTable.getValueAt(row, 0));
+			selectedAuthor = String.valueOf(bookTable.getValueAt(row, 1));
+		} catch (IndexOutOfBoundsException e) {
+			showMsg("select.book.first", "remove.book");
+		}
 		Query query = session.createQuery("delete from Books where title=:title and author=:author");
 		query.setParameter("title", selectedTitle);
 		query.setParameter("author", selectedAuthor);
@@ -74,32 +90,71 @@ public class BooksDAO implements HibernateDBFlow {
 	}
 
 	public void addToBase(Session session) throws IOException {
-		double savedPenalty;
+		double savedPenaltyValue;
 		boolean isPenalty;
-		String savedTitle = BooksFrame.titleField.getText();
-		String savedAuthor = BooksFrame.authorField.getText();
+		Date formattedReturnToDate, formattedBorrowedDate;
+		String savedTitle = titleField.getText();
+		String savedAuthor = authorField.getText();
 		String savedBorrowed = borrowedPicker.getFormattedTextField().getText();
+		formattedBorrowedDate = Date.valueOf(changeDateFormat(savedBorrowed));
 		String savedReturnTo = returnToPicker.getFormattedTextField().getText();
+		formattedReturnToDate = Date.valueOf(changeDateFormat(savedReturnTo));
 		isPenalty = !requireNonNull(penaltyCombo.getSelectedItem()).toString().equals(setProperties().getProperty("no"));
 		if (isPenalty) {
-			savedPenalty = Double.parseDouble(penaltyField.getText());
+			savedPenaltyValue = Double.parseDouble(penaltyField.getText());
 		} else {
-			savedPenalty = 0.0;
+			savedPenaltyValue = 0.0;
 		}
-		if (savedAuthor.equals("") | savedTitle.equals("") | savedBorrowed.equals("") | savedReturnTo.equals("")) {
-			showMessageDialog(null, setProperties().getProperty("badInputMsg"),
-					setProperties().getProperty("add.book"), INFORMATION_MESSAGE);
+		if (savedAuthor.equals("") | savedTitle.equals("") | formattedBorrowedDate == null | formattedReturnToDate == null) {
+			showMsg("badInputMsg", "add.book");
 		} else {
 			session.beginTransaction();
 			Books books = new Books();
 			books.setTitle(savedTitle);
 			books.setAuthor(savedAuthor);
-			books.setBorrowed(savedBorrowed);
-			books.setReturnTo(savedReturnTo);
+			books.setBorrowed(formattedBorrowedDate);
+			books.setReturnTo(formattedReturnToDate);
 			books.setPenalty(isPenalty);
-			books.setPenalty(savedPenalty);
+			books.setPenaltyValue(savedPenaltyValue);
 			session.save(books);
 			session.getTransaction().commit();
 		}
+		checkPenalty(session);
+	}
+
+	private void showMsg(String propertyName, String windowTitle) throws IOException {
+		showMessageDialog(null, setProperties().getProperty(propertyName),
+				setProperties().getProperty(windowTitle), INFORMATION_MESSAGE);
+	}
+
+	protected void checkPenalty(Session session) throws IOException {
+		boolean penaltyFlag = false;
+		LocalDate todayDate = LocalDate.now();
+		@SuppressWarnings("unchecked")
+		List<Books> books = (List<Books>) session.createQuery("from Books").list();
+		for (Books value : books) {
+			Date date = value.getReturnTo();
+			LocalDate returnTo = date.toLocalDate();
+			if (todayDate.isAfter(returnTo)) {
+				penaltyFlag = true;
+				float penaltyValue = ChronoUnit.DAYS.between(returnTo, todayDate) * penaltyValuePerDay;
+				session.beginTransaction();
+				value.setPenalty(true);
+				value.setPenaltyValue(penaltyValue);
+				session.getTransaction().commit();
+			}
+		}
+		showPenaltyMessage(penaltyFlag);
+		showAll(session);
+	}
+
+	private void showPenaltyMessage(boolean penaltyFlag) throws IOException {
+		if (penaltyFlag) {
+			showMsg("isPenaltyMsg", "book.checkPenalty");
+		} else {
+			showMsg("isNotPenaltyMsg", "book.checkPenalty");
+		}
 	}
 }
+
+

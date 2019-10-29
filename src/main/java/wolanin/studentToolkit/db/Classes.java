@@ -1,6 +1,9 @@
 package wolanin.studentToolkit.db;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 class Classes {
@@ -15,14 +18,6 @@ class Classes {
 	private int room;
 
 	public Classes() {
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {

@@ -19,7 +19,7 @@ public class ClassLogic extends ClassesDAO implements ChooseAction {
 		if (setProperties().getProperty("schedule.today").equals(actionCommand)) {
 			showToday(session);
 		} else if (setProperties().getProperty("schedule.tommorow").equals(actionCommand)) {
-			showTommorow(session);
+			showTomorrow(session);
 		} else if (setProperties().getProperty("schedule.week").equals(actionCommand)) {
 			showAll(session);
 		} else if (setProperties().getProperty("schedule.add").equals(actionCommand)) {

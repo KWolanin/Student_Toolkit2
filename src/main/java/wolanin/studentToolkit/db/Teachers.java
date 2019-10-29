@@ -19,14 +19,6 @@ class Teachers {
 	public Teachers() {
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	String getFirstName() {
 		return firstName;
 	}

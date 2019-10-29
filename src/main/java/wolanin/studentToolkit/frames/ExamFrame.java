@@ -4,7 +4,6 @@ import com.github.lgooddatepicker.components.TimePicker;
 import org.jdatepicker.JDatePicker;
 import wolanin.studentToolkit.db.ExamsDAO;
 
-
 import javax.swing.*;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -55,6 +54,7 @@ public class ExamFrame extends JDialog {
 		panel.add(hour);
 		panel.add(timePicker);
 		JLabel room = new JLabel(setProperties().getProperty("table.room"));
+		timePicker.setTimeToNow();
 		panel.add(room);
 		panel.add(roomField);
 		save.addActionListener(e -> {
@@ -70,7 +70,7 @@ public class ExamFrame extends JDialog {
 	public static String changeDateFormat(String date) throws IOException {
 		DateFormat defaultPickerFormat = new SimpleDateFormat("dd MMM yyyy",
 				new Locale(setProperties().getProperty("locale")));
-		DateFormat standardDataFormat = new SimpleDateFormat("dd.MM.yyyy");
+		DateFormat standardDataFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date standardDate;
 		try {
 			standardDate = defaultPickerFormat.parse(date);

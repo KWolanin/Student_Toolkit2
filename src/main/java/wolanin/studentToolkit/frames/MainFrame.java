@@ -2,13 +2,13 @@ package wolanin.studentToolkit.frames;
 
 import org.hibernate.Session;
 import wolanin.studentToolkit.db.*;
-import wolanin.studentToolkit.notes.*;
+import wolanin.studentToolkit.notes.Notes;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
+import java.io.IOException;
 import java.util.Objects;
 
 import static wolanin.studentToolkit.NoteLogic.createFileDir;
@@ -28,6 +28,7 @@ public class MainFrame extends JFrame {
 	private static final JMenuBar menuBar = new JMenuBar();
 	private final JMenu fileMenu = new JMenu(setProperties().getProperty("menu.file"));
 	private final JMenu helpMenu = new JMenu(setProperties().getProperty("menu.help"));
+	private final JMenuItem settings = new JMenuItem(setProperties().getProperty("settings.title"));
 	private final JMenuItem exit = new JMenuItem(setProperties().getProperty("menu.exit"));
 	private final JMenuItem about = new JMenuItem(setProperties().getProperty("menu.about"));
 	private final JToolBar gradesToolbar = new JToolBar("gradesToolbar");
@@ -98,11 +99,13 @@ public class MainFrame extends JFrame {
 				BooksDAO b = null;
 				try {
 					b = new BooksDAO();
+
 				} catch (IOException exc) {
 					exc.printStackTrace();
 				}
 				try {
 					Objects.requireNonNull(b).showAll(session);
+
 				} catch (IOException exc) {
 					exc.printStackTrace();
 				}
@@ -110,6 +113,7 @@ public class MainFrame extends JFrame {
 				Objects.requireNonNull(t).showAll(session);
 				ex.showAll(session);
 				Objects.requireNonNull(c).showAll(session);
+
 			}
 		});
 
@@ -133,6 +137,14 @@ public class MainFrame extends JFrame {
 		setJMenuBar(menuBar);
 		menuBar.add(fileMenu);
 		menuBar.add(helpMenu);
+		menuBar.add(settings);
+		settings.addActionListener(e -> {
+			try {
+				new SettingsFrame().setVisible(true);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		});
 		fileMenu.add(exit);
 		helpMenu.add(about);
 		about.addActionListener(e -> {
@@ -180,6 +192,7 @@ public class MainFrame extends JFrame {
 		books.add(booksToolbar, BorderLayout.LINE_START);
 		createToolbarButton("book.add", booksToolbar);
 		createToolbarButton("book.delete", booksToolbar);
+		createToolbarButton("book.checkPenalty", booksToolbar);
 		books.add(booksScroll, BorderLayout.CENTER);
 		booksPanel.setLayout(new BorderLayout());
 

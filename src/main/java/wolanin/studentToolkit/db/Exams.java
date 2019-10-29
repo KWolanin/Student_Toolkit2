@@ -4,7 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.sql.Date;
 
+@SuppressWarnings("ALL")
 @Entity
 class Exams {
 
@@ -13,7 +15,7 @@ class Exams {
 	private int id;
 	private String name;
 	private String type;
-	private String date;
+	private Date date;
 	private String hour;
 	private int room;
 
@@ -21,6 +23,7 @@ class Exams {
 
 	}
 
+	@SuppressWarnings("unused")
 	public int getId() {
 		return id;
 	}
@@ -45,11 +48,11 @@ class Exams {
 		this.type = type;
 	}
 
-	String getDate() {
+	Date getDate() {
 		return date;
 	}
 
-	void setDate(String date) {
+	void setDate(Date date) {
 		this.date = date;
 	}
 

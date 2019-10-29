@@ -1,10 +1,9 @@
 package wolanin.studentToolkit.db;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.sql.Date;
 
+@SuppressWarnings("unused")
 @Entity
 class Books {
 
@@ -13,20 +12,13 @@ class Books {
 	private int id;
 	private String title;
 	private String author;
-	private String borrowed;
-	private String returnTo;
+	private Date borrowed;
+	private Date returnTo;
 	private boolean isPenalty;
-	private double penalty;
+	@Column(name = "penalty")
+	private double penaltyValue;
 
 	public Books() {
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getTitle() {
@@ -45,19 +37,19 @@ class Books {
 		this.author = author;
 	}
 
-	String getBorrowed() {
+	Date getBorrowed() {
 		return borrowed;
 	}
 
-	public void setBorrowed(String borrowed) {
+	public void setBorrowed(Date borrowed) {
 		this.borrowed = borrowed;
 	}
 
-	String getReturnTo() {
+	Date getReturnTo() {
 		return returnTo;
 	}
 
-	public void setReturnTo(String returnTo) {
+	public void setReturnTo(Date returnTo) {
 		this.returnTo = returnTo;
 	}
 
@@ -69,11 +61,11 @@ class Books {
 		isPenalty = penalty;
 	}
 
-	double getPenalty() {
-		return penalty;
+	double getPenaltyValue() {
+		return penaltyValue;
 	}
 
-	public void setPenalty(double penalty) {
-		this.penalty = penalty;
+	public void setPenaltyValue(double penaltyValue) {
+		this.penaltyValue = penaltyValue;
 	}
 }

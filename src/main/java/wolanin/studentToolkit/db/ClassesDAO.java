@@ -2,9 +2,8 @@ package wolanin.studentToolkit.db;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import wolanin.studentToolkit.frames.MainFrame;
 import wolanin.studentToolkit.frames.ClassesFrame;
-import wolanin.studentToolkit.table.TableFormatter;
+import wolanin.studentToolkit.frames.MainFrame;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -12,9 +11,9 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 
-
-import static wolanin.studentToolkit.frames.MainFrame.*;
 import static wolanin.studentToolkit.frames.ClassesFrame.*;
+import static wolanin.studentToolkit.frames.MainFrame.classesPanel;
+import static wolanin.studentToolkit.frames.MainFrame.classesTable;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
 import static wolanin.studentToolkit.table.TableFormatter.*;
 
@@ -44,13 +43,14 @@ public class ClassesDAO implements HibernateDBFlow {
 			String[] data = {name, startHour, endHour, String.valueOf(room), dayOfWeek};
 			tableModel.addRow(data);
 		}
-		TableFormatter.setTableProp(classesPanel, classesTable, tableModel);
+		setTableProp(classesPanel, classesTable, tableModel);
 	}
 
 	protected void showToday(Session session) {
+		//todo
 		String today = getNameOfDay(getTodayDateToString());
 		String sql = "from Classes where dayofweek='" + today + "'";
-		TableFormatter.setTableModelProp(columnNames);
+		setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Classes> classes = (List<Classes>) session.createQuery(sql).list();
 		for (Classes value : classes) {
@@ -62,12 +62,13 @@ public class ClassesDAO implements HibernateDBFlow {
 			String[] data = {name, startHour, endHour, String.valueOf(room), dayOfWeek};
 			tableModel.addRow(data);
 		}
-		TableFormatter.setTableProp(classesPanel, classesTable, tableModel);
+		setTableProp(classesPanel, classesTable, tableModel);
 
 
 	}
 
-	protected void showTommorow(Session session) {
+	protected void showTomorrow(Session session) {
+		//todo
 		String x = null;
 		try {
 			x = addOneDay(getTodayDateToString());
@@ -76,7 +77,7 @@ public class ClassesDAO implements HibernateDBFlow {
 		}
 		String tommorowName = getNameOfDay(x);
 		String sqle = "from Classes where dayofweek='" + tommorowName + "'";
-		TableFormatter.setTableModelProp(columnNames);
+		setTableModelProp(columnNames);
 		@SuppressWarnings("unchecked")
 		List<Classes> classes = (List<Classes>) session.createQuery(sqle).list();
 		for (Classes value : classes) {
@@ -88,7 +89,7 @@ public class ClassesDAO implements HibernateDBFlow {
 			String[] data = {name, startHour, endHour, String.valueOf(room), dayOfWeek};
 			tableModel.addRow(data);
 		}
-		TableFormatter.setTableProp(classesPanel, classesTable, tableModel);
+		setTableProp(classesPanel, classesTable, tableModel);
 	}
 
 	@Override
@@ -118,8 +119,7 @@ public class ClassesDAO implements HibernateDBFlow {
 		String endHour = endHourPicker.getText();
 		int room = Integer.parseInt(ClassesFrame.roomField.getText());
 		if (classesName.equals("") | room == 0 | dayofWeek.equals("") | startHour.equals("") | endHour.equals("")) {
-			JOptionPane.showMessageDialog(null, setProperties().getProperty("badInputMsg"),
-					setProperties().getProperty("add.title.classes"), JOptionPane.INFORMATION_MESSAGE);
+			showMsg();
 		} else {
 			session.beginTransaction();
 			Classes classes = new Classes();
@@ -131,5 +131,10 @@ public class ClassesDAO implements HibernateDBFlow {
 			session.save(classes);
 			session.getTransaction().commit();
 		}
+	}
+
+	private void showMsg() throws IOException {
+		JOptionPane.showMessageDialog(null, setProperties().getProperty("badInputMsg"),
+				setProperties().getProperty("add.title.classes"), JOptionPane.INFORMATION_MESSAGE);
 	}
 }

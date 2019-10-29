@@ -50,15 +50,20 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `exams`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `exams` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(40) NOT NULL,
-  `type` varchar(25) NOT NULL,
-  `date` varchar(15) DEFAULT NULL,
-  `hour` varchar(10) NOT NULL,
-  `room` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+create table exams
+(
+    id   int auto_increment,
+    name varchar(40)       not null,
+    type varchar(25)       not null,
+    date date default NULL null,
+    hour varchar(10)       not null,
+    room int               not null,
+    primary key (id)
+)
+    engine = InnoDB
+    collate = utf8mb4_0900_ai_ci;
+
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
