@@ -2,7 +2,6 @@ package wolanin.studentToolkit.db;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-
 import wolanin.studentToolkit.frames.GradeFrame;
 import wolanin.studentToolkit.table.TableFormatter;
 
@@ -11,8 +10,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static wolanin.studentToolkit.frames.MainFrame.*;
 import static wolanin.studentToolkit.frames.GradeFrame.*;
+import static wolanin.studentToolkit.frames.MainFrame.gradesPanel;
+import static wolanin.studentToolkit.frames.MainFrame.gradesTable;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
 import static wolanin.studentToolkit.table.TableFormatter.tableModel;
 
@@ -120,7 +120,7 @@ public class GradesDAO implements HibernateDBFlow {
 		float sum = 0.0f;
 		float wage = 0.0f;
 		@SuppressWarnings("unchecked")
-		List<Grades> grades = (List<Grades>) session.createQuery("from Grades where examKind ='egzamin'").list();
+		List<Grades> grades = (List<Grades>) session.createQuery("from Grades where examKind ='egzamin' or examKind = 'exam'").list();
 		System.out.println(grades.size());
 		for (Grades value : grades) {
 			wage = wage + value.getEcts();

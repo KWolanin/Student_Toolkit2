@@ -16,7 +16,6 @@ public class LangProperties {
 			in = new BufferedReader(
 					new InputStreamReader(
 							new FileInputStream(polLang), StandardCharsets.UTF_8));
-
 		} else {
 			in = new BufferedReader(
 					new InputStreamReader(
@@ -24,7 +23,10 @@ public class LangProperties {
 		}
 		Properties properties = new Properties();
 		properties.load(in);
+		in.close();
+
 		return properties;
 	}
+
 
 }

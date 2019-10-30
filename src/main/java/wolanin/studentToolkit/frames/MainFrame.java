@@ -17,6 +17,7 @@ import static wolanin.studentToolkit.frames.ComponentCreator.setToolbarSettings;
 import static wolanin.studentToolkit.language.LangProperties.setProperties;
 
 
+
 public class MainFrame extends JFrame {
 	static final JTabbedPane tabs = new JTabbedPane();
 	private final JLabel grades = new JLabel();
@@ -28,7 +29,7 @@ public class MainFrame extends JFrame {
 	private static final JMenuBar menuBar = new JMenuBar();
 	private final JMenu fileMenu = new JMenu(setProperties().getProperty("menu.file"));
 	private final JMenu helpMenu = new JMenu(setProperties().getProperty("menu.help"));
-	private final JMenuItem settings = new JMenuItem(setProperties().getProperty("settings.title"));
+	private final JMenuItem settings = new JMenuItem("\uD83D\uDD27  " + setProperties().getProperty("settings.title"));
 	private final JMenuItem exit = new JMenuItem(setProperties().getProperty("menu.exit"));
 	private final JMenuItem about = new JMenuItem(setProperties().getProperty("menu.about"));
 	private final JToolBar gradesToolbar = new JToolBar("gradesToolbar");
@@ -54,6 +55,7 @@ public class MainFrame extends JFrame {
 	public static final JTable examTable = new JTable();
 	public static final JTable bookTable = new JTable();
 
+
 	public static Notes notes;
 
 	static {
@@ -77,46 +79,22 @@ public class MainFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
-				GradesDAO g = null;
 				try {
-					g = new GradesDAO();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				TeacherDAO t = null;
-				try {
-					t = new TeacherDAO();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-				ExamsDAO ex = new ExamsDAO();
-				ClassesDAO c = null;
-				try {
-					c = new ClassesDAO();
-				} catch (IOException exc) {
-					exc.printStackTrace();
-				}
-				BooksDAO b = null;
-				try {
-					b = new BooksDAO();
-
-				} catch (IOException exc) {
-					exc.printStackTrace();
-				}
-				try {
+					ExamsDAO ex = new ExamsDAO();
+					GradesDAO g = new GradesDAO();
+					TeacherDAO t = new TeacherDAO();
+					ClassesDAO c = new ClassesDAO();
+					BooksDAO b = new BooksDAO();
 					Objects.requireNonNull(b).showAll(session);
-
-				} catch (IOException exc) {
-					exc.printStackTrace();
+					Objects.requireNonNull(g).showAll(session);
+					Objects.requireNonNull(t).showAll(session);
+					ex.showAll(session);
+					Objects.requireNonNull(c).showAll(session);
+				} catch (IOException io) {
+					io.printStackTrace();
 				}
-				Objects.requireNonNull(g).showAll(session);
-				Objects.requireNonNull(t).showAll(session);
-				ex.showAll(session);
-				Objects.requireNonNull(c).showAll(session);
-
 			}
 		});
-
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -128,12 +106,16 @@ public class MainFrame extends JFrame {
 		setVisible(true);
 		setResizable(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+
 	}
+
+	private static Container contentPane;
 
 	private void initComponents() throws IOException {
 		setIconImage(new ImageIcon("src\\main\\resources\\student.png").getImage());
 		setTitle(setProperties().getProperty("app.title"));
-		Container contentPane = getContentPane();
+		contentPane = getContentPane();
 		setJMenuBar(menuBar);
 		menuBar.add(fileMenu);
 		menuBar.add(helpMenu);
@@ -230,7 +212,6 @@ public class MainFrame extends JFrame {
 		ownNotes.add(scrollPane);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		noteArea.setLineWrap(true);
+		pack();
 	}
-
-
 }

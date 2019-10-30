@@ -74,7 +74,7 @@ public class BooksDAO implements HibernateDBFlow {
 			selectedTitle = String.valueOf(bookTable.getValueAt(row, 0));
 			selectedAuthor = String.valueOf(bookTable.getValueAt(row, 1));
 		} catch (IndexOutOfBoundsException e) {
-			showMsg("select.book.first", "remove.book");
+			showMsg("select.books.first", "remove.book");
 		}
 		Query query = session.createQuery("delete from Books where title=:title and author=:author");
 		query.setParameter("title", selectedTitle);

@@ -75,6 +75,15 @@ class ComponentCreator {
 		frame.setLocation((width - widthFrame) / 2, (height - heightFrame) / 2);
 	}
 
+	static void setFrameCenter(JDialog frame) {
+		int width = Toolkit.getDefaultToolkit().getScreenSize().width;
+		int height = Toolkit.getDefaultToolkit().getScreenSize().height;
+		frame.setSize(width / 2, (int) (height / (1.5)));
+		int widthFrame = frame.getSize().width;
+		int heightFrame = frame.getSize().height;
+		frame.setLocation((width - widthFrame) / 2, (height - heightFrame) / 2);
+	}
+
 
 	static void createToolbarButton(String title, JToolBar toolbarName) {
 		JButton button = new JButton();
