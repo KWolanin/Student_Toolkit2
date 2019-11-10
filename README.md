@@ -8,10 +8,11 @@ UI: Swing.
 Inne narzędzia: Maven.
 
 ## English:
-Java programming coursework with example database. A program allows students to manage their grades, exams dates, and schedule. The program also allows to make quick notes and create e-mail base with lecturer's addresses. Only Polish language version - just for now. English version - work in progress.
+Java programming coursework with example database. A program allows students to manage their grades, exams dates, and schedule. The program also allows to make quick notes and create e-mail base with lecturer's addresses. Polish and English versions available (only Polish grade system in this moment, sorry!).
 Database: H2, Hibernate.
 UI: Swing
 Other tools: Maven.
+
 
 ## Screenshots
 ![Screenshot_1](https://user-images.githubusercontent.com/33088408/63708586-1f921500-c835-11e9-89f7-ebfbcd4efd0c.png)
